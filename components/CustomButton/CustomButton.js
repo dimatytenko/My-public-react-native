@@ -8,7 +8,7 @@ import {
 
 import { globalStyle } from "../../styles/style";
 
-export function Button({ text, onPress }) {
+export function CustomButton({ text, onPress }) {
   return (
     <TouchableOpacity
       style={styles.btn}
@@ -20,7 +20,7 @@ export function Button({ text, onPress }) {
   );
 }
 
-Button.propTypes = {
+CustomButton.propTypes = {
   text: PropTypes.string.isRequired,
   onPress: PropTypes.func,
 };

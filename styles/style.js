@@ -35,6 +35,12 @@ export const globalStyle = StyleSheet.create({
     lineHeight: 19,
     color: "#BDBDBD",
   },
+  header: {
+    fontFamily: "r-r",
+    fontSize: 17,
+    lineHeight: 22,
+    color: "#212121",
+  },
 });
 
 export const auth = StyleSheet.create({
@@ -72,6 +78,21 @@ export const auth = StyleSheet.create({
     color: globalStyle.colors.fontMod,
   },
   iconPassword: {
+    fontFamily: "r-r",
+    fontSize: 16,
+    lineHeight: 19,
+    color: globalStyle.colors.fontMod,
+  },
+  image: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "flex-end",
+  },
+  link: {
+    marginTop: 16,
+    alignSelf: "center",
+  },
+  linkText: {
     fontFamily: "r-r",
     fontSize: 16,
     lineHeight: 19,
