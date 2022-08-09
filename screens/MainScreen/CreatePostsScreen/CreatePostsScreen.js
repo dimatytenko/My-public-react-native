@@ -4,31 +4,57 @@ import {
   TouchableOpacity,
   View,
   StyleSheet,
+  TextInput,
 } from "react-native";
 import { Camera, CameraType } from "expo-camera";
+import * as MediaLibrary from "expo-media-library";
 import { Entypo, MaterialIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import * as Location from "expo-location";
+import { Ionicons } from "@expo/vector-icons";
 
 import { globalStyle } from "../../../styles/style";
 import { CustomButton } from "../../../components/CustomButton";
 
 export function CreatePostsScreen() {
+  const navigation = useNavigation();
   const [hasPermission, setHasPermission] = useState(null);
+  const [cameraRef, setCameraRef] = useState(null);
+  const [location, setLocation] = useState(null);
   const [type, setType] = useState(CameraType.back);
-  const [camera, setCamera] = useState(null);
   const [photo, setPhoto] = useState(null);
+  const [comment, setComment] = useState("");
+  const [place, setPlace] = useState("");
 
-  console.log(hasPermission);
+  console.log(cameraRef);
 
-  const takePhoto = async () => {
-    const photo = await camera.takePictureAsync();
-    setPhoto(photo.uri);
-    console.log("photo", photo);
-  };
+  useEffect(() => {
+    (async () => {
+      let { status } =
+        await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log(
+          "Permission to access location was denied"
+        );
+      }
+
+      let location = await Location.getCurrentPositionAsync(
+        {}
+      );
+      const coords = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      };
+      setLocation(coords);
+    })();
+  }, []);
 
   useEffect(() => {
     (async () => {
       const { status } =
         await Camera.requestCameraPermissionsAsync();
+      await MediaLibrary.requestPermissionsAsync();
+
       setHasPermission(status === "granted");
     })();
   }, []);
@@ -37,8 +63,32 @@ export function CreatePostsScreen() {
     return <View />;
   }
   if (hasPermission === false) {
-    return <Text>"Немає доступу до камери</Text>;
+    return <Text>Немає доступу до камери</Text>;
   }
+
+  const takePhoto = async () => {
+    if (cameraRef) {
+      const { uri } = await cameraRef.takePictureAsync();
+      await MediaLibrary.createAssetAsync(uri);
+      setPhoto(uri);
+    }
+  };
+
+  const sendPost = () => {
+    if (!photo) {
+      return;
+    }
+    navigation.navigate("DefaultScreen", {
+      photo,
+      location,
+      comment,
+      place,
+    });
+    setPhoto(null);
+    setLocation(null);
+    setComment("");
+    setPlace("");
+  };
 
   return (
     <>
@@ -62,7 +112,9 @@ export function CreatePostsScreen() {
           <Camera
             style={styles.camera}
             type={type}
-            ref={setCamera}
+            ref={(ref) => {
+              setCameraRef(ref);
+            }}
           >
             <TouchableOpacity
               onPress={() => {
@@ -72,7 +124,7 @@ export function CreatePostsScreen() {
                     : CameraType.back
                 );
               }}
-              activeOpacity={0.7}
+              activeOpacity={0.5}
               style={styles.flipCamera}
             >
               <MaterialIcons
@@ -83,7 +135,7 @@ export function CreatePostsScreen() {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={takePhoto}
-              activeOpacity={0.7}
+              activeOpacity={0.5}
               style={styles.snapContainer}
             >
               <Entypo
@@ -94,10 +146,54 @@ export function CreatePostsScreen() {
             </TouchableOpacity>
           </Camera>
         </View>
-        <Text style={globalStyle.placeholder}>
+        <Text
+          style={{
+            ...globalStyle.placeholder,
+            ...styles.downloadButton,
+          }}
+        >
           Завантажити фото
         </Text>
-        <CustomButton text={"Опублікувати"}></CustomButton>
+        <View style={styles.commentInputView}>
+          <TextInput
+            style={{
+              ...styles.input,
+              ...globalStyle.mainText,
+            }}
+            onChangeText={setComment}
+            value={comment}
+            placeholder="Назва..."
+            placeholderTextColor={
+              globalStyle.colors.fontSecondary
+            }
+          />
+        </View>
+        <View style={styles.placeInputView}>
+          <TextInput
+            style={{
+              ...styles.input,
+              ...globalStyle.mainText,
+              paddingLeft: 28,
+            }}
+            onChangeText={setPlace}
+            value={place}
+            placeholder="Місцевість..."
+            placeholderTextColor={
+              globalStyle.colors.fontSecondary
+            }
+          />
+          <View style={styles.iconLocation}>
+            <Ionicons
+              name="ios-location-outline"
+              size={24}
+              color={globalStyle.colors.fontSecondary}
+            />
+          </View>
+        </View>
+        <CustomButton
+          onPress={sendPost}
+          text={"Публікувати"}
+        ></CustomButton>
       </View>
     </>
   );
@@ -134,6 +230,25 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255, 255, 255, 0.3)",
     justifyContent: "center",
     alignItems: "center",
+  },
+  downloadButton: {
+    marginBottom: 32,
+  },
+  commentInputView: {
+    marginBottom: 16,
+  },
+  placeInputView: {
+    marginBottom: 32,
+  },
+  input: {
+    paddingTop: 15,
+    paddingBottom: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: globalStyle.colors.borderInput,
+  },
+  iconLocation: {
+    position: "absolute",
+    top: 15,
   },
   snapContainer: {
     width: 60,
