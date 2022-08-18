@@ -4,6 +4,10 @@ export const globalStyle = StyleSheet.create({
   container: {
     paddingHorizontal: 16,
   },
+  screenContainer: {
+    paddingHorizontal: 16,
+    marginTop: 32,
+  },
   colors: {
     fontPrimary: "#212121",
     fontSecondary: "#BDBDBD",
@@ -19,6 +23,12 @@ export const globalStyle = StyleSheet.create({
   },
   mainText: {
     fontFamily: "r-r",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#212121",
+  },
+  mainBoldText: {
+    fontFamily: "r-b",
     fontSize: 16,
     lineHeight: 19,
     color: "#212121",

@@ -1,12 +1,14 @@
 import { useEffect, useState, useCallback } from "react";
+import { Provider } from "react-redux";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View, Dimensions } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import { NavigationContainer } from "@react-navigation/native";
-import { globalStyle } from "./styles/style";
 
+import { globalStyle } from "./styles/style";
 import { useRoute } from "./router";
+import { store } from "./redux/store";
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
@@ -41,7 +43,9 @@ export default function App() {
 
   return (
     <View onLayout={onLayout} style={styles.container}>
-      <NavigationContainer>{routing}</NavigationContainer>
+      <Provider store={store}>
+        <NavigationContainer>{routing}</NavigationContainer>
+      </Provider>
 
       <StatusBar style="auto" />
     </View>

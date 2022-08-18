@@ -22,7 +22,6 @@ export function Home() {
           options={{
             headerShown: false,
             tabBarShowLabel: false,
-            // title: "Публікації",
 
             tabBarIcon: ({ focused, size, color }) => (
               <MaterialIcons
@@ -37,9 +36,9 @@ export function Home() {
         />
         <MainTab.Screen
           options={{
-            headerShown: false,
             tabBarShowLabel: false,
-            // title: "Публікації",
+            title: "Створити публікацію",
+            headerTitleAlign: "center",
 
             tabBarIcon: ({ focused, size, color }) => (
               <Feather
@@ -54,9 +53,9 @@ export function Home() {
         />
         <MainTab.Screen
           options={{
-            headerShown: false,
             tabBarShowLabel: false,
-            // title: "Публікації",
+            title: "Профіль",
+            headerTitleAlign: "center",
 
             tabBarIcon: ({ focused, size, color }) => (
               <MaterialCommunityIcons

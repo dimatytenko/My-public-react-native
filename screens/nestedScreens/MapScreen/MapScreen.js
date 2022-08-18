@@ -10,14 +10,15 @@ import { useRoute } from "@react-navigation/native";
 
 export function MapScreen() {
   const route = useRoute();
-  console.log(route);
+  const latitude = route.params.location.latitude;
+  const longitude = route.params.location.longitude;
   return (
     <View style={styles.container}>
       <MapView
         style={styles.mapStyle}
         region={{
-          latitude: 37.78825,
-          longitude: -122.4324,
+          latitude,
+          longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
@@ -29,8 +30,8 @@ export function MapScreen() {
         <Marker
           title="I am here"
           coordinate={{
-            latitude: 37.78825,
-            longitude: -122.4324,
+            latitude,
+            longitude,
           }}
           description="Hello"
         />

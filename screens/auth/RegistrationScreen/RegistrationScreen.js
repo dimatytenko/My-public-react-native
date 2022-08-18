@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import {
   StyleSheet,
@@ -17,9 +18,10 @@ import { useNavigation } from "@react-navigation/native";
 import { CustomButton } from "../../../components/CustomButton";
 import { globalStyle, auth } from "../../../styles/style";
 import { chengePaddingBottom } from "../../../functions";
+import { authSignUpUser } from "../../../redux/auth/authOperations";
 
 const initialState = {
-  name: "",
+  nickName: "",
   email: "",
   password: "",
 };
@@ -33,14 +35,18 @@ export function RegistrationScreen({
   const [state, setState] = useState(initialState);
   const [isSecurity, setIsSecurity] = useState(true);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
+  // console.log(authf);
 
   function onSubmit() {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
     console.log(state);
+    dispatch(authSignUpUser(state));
     setState(initialState);
-    setIsloggedIn(true);
-    () => navigation.navigate("Home");
+    // setIsloggedIn(true);
+    // () => navigation.navigate("Home");
   }
 
   return (
@@ -92,11 +98,11 @@ export function RegistrationScreen({
                 onFocus={() => {
                   setIsShowKeyboard(true);
                 }}
-                value={state.name}
+                value={state.nickName}
                 onChangeText={(value) =>
                   setState((prevState) => ({
                     ...prevState,
-                    name: value,
+                    nickName: value,
                   }))
                 }
               />
