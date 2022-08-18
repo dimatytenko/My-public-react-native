@@ -9,7 +9,7 @@ import { Home } from "./screens/MainScreen/Home";
 
 const AuthStack = createNativeStackNavigator();
 
-export const useRoute = (isAuth, setIsloggedIn) => {
+export const useRoute = (isAuth) => {
   const [dimensions, setdimensions] = useState(
     Dimensions.get("window").width - 20 * 2
   );
@@ -36,10 +36,7 @@ export const useRoute = (isAuth, setIsloggedIn) => {
           name="Register"
         >
           {() => (
-            <RegistrationScreen
-              dimensions={dimensions}
-              setIsloggedIn={setIsloggedIn}
-            />
+            <RegistrationScreen dimensions={dimensions} />
           )}
         </AuthStack.Screen>
         <AuthStack.Screen
@@ -48,12 +45,7 @@ export const useRoute = (isAuth, setIsloggedIn) => {
           }}
           name="Login"
         >
-          {() => (
-            <LoginScreen
-              dimensions={dimensions}
-              setIsloggedIn={setIsloggedIn}
-            />
-          )}
+          {() => <LoginScreen dimensions={dimensions} />}
         </AuthStack.Screen>
       </AuthStack.Navigator>
     );

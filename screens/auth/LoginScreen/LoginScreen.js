@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import {
   StyleSheet,
@@ -17,25 +18,28 @@ import { useNavigation } from "@react-navigation/native";
 import { CustomButton } from "../../../components/CustomButton";
 import { globalStyle, auth } from "../../../styles/style";
 import { chengePaddingBottom } from "../../../functions";
+import { authSignInUser } from "../../../redux/auth/authOperations";
 
 const initialState = {
   email: "",
   password: "",
 };
-export function LoginScreen({ dimensions, setIsloggedIn }) {
+export function LoginScreen({ dimensions }) {
   const [isShowKeyboard, setIsShowKeyboard] =
     useState(false);
   const [state, setState] = useState(initialState);
   const [isSecurity, setIsSecurity] = useState(true);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   function onSubmit() {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
     console.log(state);
+    dispatch(authSignInUser(state));
     setState(initialState);
-    setIsloggedIn(true);
-    () => navigation.navigate("Home");
+    // setIsloggedIn(true);
+    // () => navigation.navigate("Home");
   }
 
   return (

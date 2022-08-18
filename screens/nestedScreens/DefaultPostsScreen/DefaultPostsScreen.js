@@ -26,7 +26,7 @@ export function DefaultPostsScreen() {
     }
   }, [route.params]);
 
-  console.log(posts);
+  // console.log(posts);
 
   return (
     <View style={styles.container}>

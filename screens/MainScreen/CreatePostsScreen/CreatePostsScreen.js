@@ -17,6 +17,7 @@ import { useIsFocused } from "@react-navigation/native";
 
 import { globalStyle } from "../../../styles/style";
 import { CustomButton } from "../../../components/CustomButton";
+import db from "../../../firebase/config";
 
 export function CreatePostsScreen() {
   const navigation = useNavigation();
@@ -29,8 +30,7 @@ export function CreatePostsScreen() {
   const [comment, setComment] = useState("");
   const [place, setPlace] = useState("");
 
-  console.log(cameraRef);
-  console.log(isFocused);
+  console.log(db);
 
   useEffect(() => {
     (async () => {
@@ -81,10 +81,24 @@ export function CreatePostsScreen() {
     console.log(MediaLibrary);
   };
 
+  const uploadPhotoToServer = async () => {
+    const response = await fetch(photo);
+    const file = await response.blob();
+
+    const uniquePostId = Date.now().toString();
+
+    const data = await db
+      .storage()
+      .ref(`postImage/${uniquePostId}`)
+      .put(file);
+    console.log("data", data);
+  };
+
   const sendPost = () => {
     if (!photo) {
       return;
     }
+    uploadPhotoToServer();
     navigation.navigate("DefaultScreen", {
       photo,
       location,

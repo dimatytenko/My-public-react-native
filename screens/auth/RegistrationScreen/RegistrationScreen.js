@@ -26,10 +26,7 @@ const initialState = {
   password: "",
 };
 
-export function RegistrationScreen({
-  dimensions,
-  setIsloggedIn,
-}) {
+export function RegistrationScreen({ dimensions }) {
   const [isShowKeyboard, setIsShowKeyboard] =
     useState(false);
   const [state, setState] = useState(initialState);
