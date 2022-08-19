@@ -14,19 +14,30 @@ import { Ionicons } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 
 import { globalStyle } from "../../../styles/style";
+import db from "../../../firebase/config";
 
 export function DefaultPostsScreen() {
   const navigation = useNavigation();
   const route = useRoute();
   const [posts, setPosts] = useState([]);
 
-  useEffect(() => {
-    if (route.params) {
-      setPosts((prevState) => [...prevState, route.params]);
-    }
-  }, [route.params]);
+  const getAllPost = async () => {
+    await db
+      .firestore()
+      .collection("posts")
+      .onSnapshot((data) =>
+        setPosts(
+          data.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }))
+        )
+      );
+  };
 
-  // console.log(posts);
+  useEffect(() => {
+    getAllPost();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -49,7 +60,7 @@ export function DefaultPostsScreen() {
                 style={styles.infoBottomPost}
                 onPress={() => {
                   navigation.navigate("Comments", {
-                    // location: item.location,
+                    postId: item.id,
                   });
                 }}
                 activeOpacity={0.7}

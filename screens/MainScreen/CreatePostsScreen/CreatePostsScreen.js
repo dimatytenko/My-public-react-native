@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import {
   Text,
   TouchableOpacity,
@@ -29,8 +30,9 @@ export function CreatePostsScreen() {
   const [photo, setPhoto] = useState(null);
   const [comment, setComment] = useState("");
   const [place, setPlace] = useState("");
-
-  console.log(db);
+  const { userId, nickName } = useSelector(
+    (state) => state.auth
+  );
 
   useEffect(() => {
     (async () => {
@@ -41,15 +43,6 @@ export function CreatePostsScreen() {
           "Permission to access location was denied"
         );
       }
-
-      let location = await Location.getCurrentPositionAsync(
-        {}
-      );
-      const coords = {
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-      };
-      setLocation(coords);
     })();
   }, []);
 
@@ -74,6 +67,16 @@ export function CreatePostsScreen() {
     if (cameraRef) {
       const { uri } = await cameraRef.takePictureAsync();
       await MediaLibrary.createAssetAsync(uri);
+
+      let location = await Location.getCurrentPositionAsync(
+        {}
+      );
+      const coords = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      };
+
+      setLocation(coords);
       setPhoto(uri);
     }
   };
@@ -87,18 +90,40 @@ export function CreatePostsScreen() {
 
     const uniquePostId = Date.now().toString();
 
-    const data = await db
+    await db
       .storage()
       .ref(`postImage/${uniquePostId}`)
       .put(file);
-    console.log("data", data);
+
+    const processedPhoto = await db
+      .storage()
+      .ref("postImage")
+      .child(uniquePostId)
+      .getDownloadURL();
+
+    return processedPhoto;
+  };
+
+  const uploadPostToServer = async () => {
+    const photo = await uploadPhotoToServer();
+    const createPost = await db
+      .firestore()
+      .collection("posts")
+      .add({
+        photo,
+        comment,
+        place,
+        location,
+        userId,
+        nickName,
+      });
   };
 
   const sendPost = () => {
     if (!photo) {
       return;
     }
-    uploadPhotoToServer();
+    uploadPostToServer();
     navigation.navigate("DefaultScreen", {
       photo,
       location,

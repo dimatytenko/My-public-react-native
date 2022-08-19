@@ -20,6 +20,7 @@ export const globalStyle = StyleSheet.create({
     page: "#ffffff",
     button: "#FF6C00",
     input: "#F6F6F6",
+    comment: "#F6F6F6",
   },
   mainText: {
     fontFamily: "r-r",
