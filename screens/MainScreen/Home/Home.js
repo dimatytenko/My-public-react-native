@@ -1,16 +1,16 @@
 import React from "react";
 import { Text, StyleSheet, View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
-import { CreatePostsScreen } from "../CreatePostsScreen";
-import { PostsScreen } from "../PostsScreen";
-import { ProfileScreen } from "../ProfileScreen";
-
 import {
   Feather,
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
+
+import { CreatePostsScreen } from "../CreatePostsScreen";
+import { PostsScreen } from "../PostsScreen";
+import { ProfileScreen } from "../ProfileScreen";
+import { globalStyle } from "../../../styles/style";
 
 const MainTab = createBottomTabNavigator();
 
@@ -39,6 +39,9 @@ export function Home() {
             tabBarShowLabel: false,
             title: "Створити публікацію",
             headerTitleAlign: "center",
+            headerTitleStyle: {
+              ...globalStyle.mainTitle,
+            },
 
             tabBarIcon: ({ focused, size, color }) => (
               <Feather
@@ -54,8 +57,7 @@ export function Home() {
         <MainTab.Screen
           options={{
             tabBarShowLabel: false,
-            title: "Профіль",
-            headerTitleAlign: "center",
+            headerShown: false,
 
             tabBarIcon: ({ focused, size, color }) => (
               <MaterialCommunityIcons

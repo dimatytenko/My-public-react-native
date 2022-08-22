@@ -38,8 +38,6 @@ export function LoginScreen({ dimensions }) {
     console.log(state);
     dispatch(authSignInUser(state));
     setState(initialState);
-    // setIsloggedIn(true);
-    // () => navigation.navigate("Home");
   }
 
   return (

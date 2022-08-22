@@ -25,6 +25,7 @@ export const authSignUpUser =
         updateUserProfile({
           nickName: displayName,
           userId: uid,
+          email: email,
         })
       );
     } catch (error) {
@@ -62,6 +63,7 @@ export const authStateChangeUser =
           updateUserProfile({
             nickName: user.displayName,
             userId: user.uid,
+            email: user.email,
           })
         );
         dispatch(

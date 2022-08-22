@@ -1,7 +1,4 @@
-import { useEffect, useState } from "react";
-
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Dimensions } from "react-native";
 
 import { LoginScreen } from "./screens/auth/LoginScreen/LoginScreen";
 import { RegistrationScreen } from "./screens/auth/RegistrationScreen/RegistrationScreen";
@@ -10,22 +7,6 @@ import { Home } from "./screens/MainScreen/Home";
 const AuthStack = createNativeStackNavigator();
 
 export const useRoute = (isAuth) => {
-  const [dimensions, setdimensions] = useState(
-    Dimensions.get("window").width - 20 * 2
-  );
-
-  useEffect(() => {
-    const onChange = () => {
-      const width = Dimensions.get("window").width;
-      console.log(width);
-      setdimensions(width);
-    };
-    Dimensions.addEventListener("change", onChange);
-    return () => {
-      Dimensions.removeEventListener("change", onChange);
-    };
-  }, []);
-
   if (!isAuth) {
     return (
       <AuthStack.Navigator>
@@ -35,9 +16,7 @@ export const useRoute = (isAuth) => {
           }}
           name="Register"
         >
-          {() => (
-            <RegistrationScreen dimensions={dimensions} />
-          )}
+          {() => <RegistrationScreen />}
         </AuthStack.Screen>
         <AuthStack.Screen
           options={{
@@ -45,7 +24,7 @@ export const useRoute = (isAuth) => {
           }}
           name="Login"
         >
-          {() => <LoginScreen dimensions={dimensions} />}
+          {() => <LoginScreen />}
         </AuthStack.Screen>
       </AuthStack.Navigator>
     );

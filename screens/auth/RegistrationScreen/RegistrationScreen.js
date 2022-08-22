@@ -34,16 +34,12 @@ export function RegistrationScreen({ dimensions }) {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  // console.log(authf);
-
   function onSubmit() {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
     console.log(state);
     dispatch(authSignUpUser(state));
     setState(initialState);
-    // setIsloggedIn(true);
-    // () => navigation.navigate("Home");
   }
 
   return (

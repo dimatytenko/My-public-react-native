@@ -26,7 +26,7 @@ export function LogOut() {
     >
       <Ionicons
         name="log-out-outline"
-        size={24}
+        size={44}
         color={globalStyle.colors.fontSecondary}
       />
     </TouchableOpacity>

@@ -24,8 +24,8 @@ export const globalStyle = StyleSheet.create({
   },
   mainText: {
     fontFamily: "r-r",
-    fontSize: 16,
-    lineHeight: 19,
+    fontSize: 20,
+    lineHeight: 25,
     color: "#212121",
   },
   mainBoldText: {
@@ -36,8 +36,8 @@ export const globalStyle = StyleSheet.create({
   },
   mainTitle: {
     fontFamily: "r-b",
-    fontSize: 30,
-    lineHeight: 35,
+    fontSize: 35,
+    lineHeight: 40,
     color: "#212121",
   },
   placeholder: {

@@ -106,17 +106,17 @@ export function CreatePostsScreen() {
 
   const uploadPostToServer = async () => {
     const photo = await uploadPhotoToServer();
-    const createPost = await db
-      .firestore()
-      .collection("posts")
-      .add({
-        photo,
-        comment,
-        place,
-        location,
-        userId,
-        nickName,
-      });
+    await db.firestore().collection("posts").add({
+      photo,
+      comment,
+      countComments: 0,
+      place,
+      location,
+      userId,
+      nickName,
+      isLike: false,
+      countLike: 0,
+    });
   };
 
   const sendPost = () => {

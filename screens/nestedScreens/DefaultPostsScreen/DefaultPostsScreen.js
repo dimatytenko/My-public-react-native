@@ -1,25 +1,16 @@
 import { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  Image,
-  Button,
-  TouchableOpacity,
-} from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { useRoute } from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons";
-import { EvilIcons } from "@expo/vector-icons";
+import { useSelector } from "react-redux";
+import { View, Text, StyleSheet } from "react-native";
 
-import { globalStyle } from "../../../styles/style";
 import db from "../../../firebase/config";
+import { PostsList } from "../../../components/PostsList";
+import { globalStyle } from "../../../styles/style";
 
 export function DefaultPostsScreen() {
-  const navigation = useNavigation();
-  const route = useRoute();
   const [posts, setPosts] = useState([]);
+  const { email, nickName } = useSelector(
+    (state) => state.auth
+  );
 
   const getAllPost = async () => {
     await db
@@ -41,100 +32,27 @@ export function DefaultPostsScreen() {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={posts}
-        keyExtractor={(item, indx) => indx.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.post}>
-            <View style={styles.boxImage}>
-              <Image
-                source={{ uri: item.photo }}
-                style={styles.image}
-              />
-            </View>
-            <Text style={{ ...globalStyle.mainBoldText }}>
-              {item.comment}
-            </Text>
-            <View style={styles.bottomPost}>
-              <TouchableOpacity
-                style={styles.infoBottomPost}
-                onPress={() => {
-                  navigation.navigate("Comments", {
-                    postId: item.id,
-                  });
-                }}
-                activeOpacity={0.7}
-              >
-                <View style={styles.iconBottomPost}>
-                  <EvilIcons
-                    name="comment"
-                    size={24}
-                    color={globalStyle.colors.fontSecondary}
-                  />
-                </View>
-                <Text>0</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.infoBottomPost}
-                onPress={() => {
-                  navigation.navigate("Map", {
-                    location: item.location,
-                  });
-                }}
-                activeOpacity={0.7}
-              >
-                <View style={styles.iconBottomPost}>
-                  <Ionicons
-                    name="ios-location-outline"
-                    size={24}
-                    color={globalStyle.colors.fontSecondary}
-                  />
-                </View>
-                <Text
-                  style={{
-                    ...globalStyle.mainText,
-                    ...styles.location,
-                  }}
-                >
-                  {item.place}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
-      />
+      <View style={styles.owner}>
+        <Text style={globalStyle.mainBoldText}>
+          {nickName}
+        </Text>
+        <Text style={globalStyle.placeholder}>{email}</Text>
+      </View>
+      <View style={styles.posts}>
+        <PostsList posts={posts} />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: 32,
-  },
-  post: {
+  container: {},
+  owner: {
     paddingHorizontal: 16,
-    marginBottom: 32,
+    marginTop: 24,
+    marginBottom: 24,
   },
-  boxImage: {
-    marginBottom: 8,
+  posts: {
+    maxHeight: "92%",
   },
-  image: {
-    height: 240,
-    borderRadius: 8,
-  },
-  place: {
-    marginBottom: 8,
-  },
-  bottomPost: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  infoBottomPost: {
-    flexDirection: "row",
-    alignItems: "flex-end",
-  },
-  iconBottomPost: {
-    marginRight: 3,
-  },
-  location: { textDecorationLine: "underline" },
 });

@@ -1,17 +1,101 @@
-import React from "react";
-import { Text, View, StyleSheet } from "react-native";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import {
+  Text,
+  View,
+  StyleSheet,
+  ImageBackground,
+} from "react-native";
+
+import db from "../../../firebase/config";
+import { PostsList } from "../../../components/PostsList";
+import { globalStyle } from "../../../styles/style";
+import { LogOut } from "../../../components/LogOut";
 
 export function ProfileScreen() {
+  const [userPosts, setUserPosts] = useState([]);
+  const { userId, nickName } = useSelector(
+    (state) => state.auth
+  );
+  const { dimensions } = useSelector(
+    (state) => state.tools
+  );
+
+  const horizontal = dimensions < 600;
+
+  useEffect(() => {
+    getUserPosts();
+  }, []);
+
+  const getUserPosts = async () => {
+    await db
+      .firestore()
+      .collection("posts")
+      .where("userId", "==", userId)
+      .onSnapshot((data) =>
+        setUserPosts(
+          data.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }))
+        )
+      );
+  };
   return (
-    <View style={styles.container}>
-      <Text>ProfileScreen</Text>
-    </View>
+    <ImageBackground
+      style={styles.image}
+      source={require("../../../assets/images/main-BG.png")}
+    >
+      <View
+        style={{
+          ...styles.body,
+          marginTop: horizontal ? 160 : 40,
+        }}
+      >
+        <View style={styles.logOut}>
+          <LogOut />
+        </View>
+        <View
+          style={{
+            ...styles.owner,
+            marginTop: horizontal ? 90 : 30,
+          }}
+        >
+          <Text style={{ ...globalStyle.mainTitle }}>
+            {nickName}
+          </Text>
+        </View>
+        <View
+          style={{
+            maxHeight: horizontal ? "80%" : "77%",
+          }}
+        >
+          <PostsList posts={userPosts} />
+        </View>
+      </View>
+    </ImageBackground>
   );
 }
 const styles = StyleSheet.create({
-  container: {
+  image: {
     flex: 1,
-    justifyContent: "center",
+    resizeMode: "cover",
+  },
+  body: {
+    backgroundColor: globalStyle.backgrounds.page,
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    flexGrow: 1,
+  },
+  owner: {
+    paddingHorizontal: 16,
+    marginBottom: 32,
     alignItems: "center",
   },
+  logOut: {
+    position: "absolute",
+    right: 16,
+    top: 22,
+  },
+  posts: {},
 });
