@@ -1,21 +1,21 @@
 import React from "react";
 import {
   View,
-  Text,
   StyleSheet,
-  Dimensions,
+  useWindowDimensions,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { useRoute } from "@react-navigation/native";
 
 export function MapScreen() {
   const route = useRoute();
+  const { height, width } = useWindowDimensions();
   const latitude = route.params.location.latitude;
   const longitude = route.params.location.longitude;
   return (
     <View style={styles.container}>
       <MapView
-        style={styles.mapStyle}
+        style={{ height, width }}
         region={{
           latitude,
           longitude,
@@ -46,9 +46,5 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
-  },
-  mapStyle: {
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
   },
 });

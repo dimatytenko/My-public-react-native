@@ -27,6 +27,7 @@ export function CreatePostsScreen() {
   const [cameraRef, setCameraRef] = useState(null);
   const [location, setLocation] = useState(null);
   const [type, setType] = useState(CameraType.back);
+  const [prevPhoto, setPrevPhoto] = useState(null);
   const [photo, setPhoto] = useState(null);
   const [comment, setComment] = useState("");
   const [place, setPlace] = useState("");
@@ -66,22 +67,28 @@ export function CreatePostsScreen() {
   const takePhoto = async () => {
     if (cameraRef) {
       const { uri } = await cameraRef.takePictureAsync();
-      await MediaLibrary.createAssetAsync(uri);
-
-      let location = await Location.getCurrentPositionAsync(
-        {}
-      );
-      const coords = {
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-      };
-
-      setLocation(coords);
-      setPhoto(uri);
+      setPrevPhoto(uri);
     }
   };
-  const downloadPhoto = async () => {
-    console.log(MediaLibrary);
+
+  const downloadPhoto = async (uri) => {
+    await MediaLibrary.createAssetAsync(uri);
+
+    let location = await Location.getCurrentPositionAsync(
+      {}
+    );
+    const coords = {
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+    };
+
+    setLocation(coords);
+    setPhoto(uri);
+    setPrevPhoto(null);
+  };
+
+  const deletePhoto = async () => {
+    setPrevPhoto(null);
   };
 
   const uploadPhotoToServer = async () => {
@@ -116,6 +123,7 @@ export function CreatePostsScreen() {
       nickName,
       isLike: false,
       countLike: 0,
+      date: new Date(),
     });
   };
 
@@ -139,6 +147,7 @@ export function CreatePostsScreen() {
     <View
       style={{
         ...globalStyle.screenContainer,
+        ...styles.container,
       }}
     >
       <View style={styles.cameraWrap}>
@@ -180,28 +189,45 @@ export function CreatePostsScreen() {
             </TouchableOpacity>
           </Camera>
         )}
-        {photo && (
-          <View style={styles.takePhotoContainer}>
-            <Image
-              style={styles.image}
-              source={{ uri: photo }}
-            ></Image>
-          </View>
-        )}
       </View>
-      <TouchableOpacity
-        onPress={downloadPhoto}
-        activeOpacity={0.5}
-      >
-        <Text
-          style={{
-            ...globalStyle.placeholder,
-            ...styles.downloadButton,
-          }}
-        >
-          Завантажити фото
-        </Text>
-      </TouchableOpacity>
+
+      {prevPhoto && (
+        <View style={styles.takePhotoContainer}>
+          <Image
+            style={styles.image}
+            source={{ uri: prevPhoto }}
+          ></Image>
+          <View style={styles.boxPermissions}>
+            <TouchableOpacity
+              onPress={() => downloadPhoto(prevPhoto)}
+              activeOpacity={0.5}
+            >
+              <Text
+                style={{
+                  ...globalStyle.placeholder,
+                  ...styles.downloadButton,
+                }}
+              >
+                Завантажити фото
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={deletePhoto}
+              activeOpacity={0.5}
+            >
+              <Text
+                style={{
+                  ...globalStyle.placeholder,
+                  ...styles.downloadButton,
+                }}
+              >
+                Видалити фото
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
+
       <View style={styles.commentInputView}>
         <TextInput
           style={{
@@ -249,6 +275,7 @@ export function CreatePostsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    // position: "relative",
   },
   header: {
     paddingTop: 55,
@@ -259,13 +286,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   cameraWrap: {
-    position: "relative",
-    marginBottom: 8,
     borderRadius: 8,
     overflow: "hidden",
   },
   camera: {
-    position: "relative",
+    // position: "relative",
     height: 240,
     alignItems: "center",
     justifyContent: "center",
@@ -284,12 +309,23 @@ const styles = StyleSheet.create({
   },
   takePhotoContainer: {
     position: "absolute",
+    width: "100%",
+    // paddingHorizontal: 16,
     top: 0,
-    left: 0,
-    zIndex: 10,
+    left: 16,
+
+    // borderRadius: 8,
+    // overflow: "hidden",
   },
+  boxPermissions: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+
   image: {
     height: 240,
+    marginBottom: 8,
+
     alignItems: "center",
     justifyContent: "center",
   },

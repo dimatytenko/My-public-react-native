@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Text,
   View,
@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   SafeAreaView,
   FlatList,
-  Image,
+  Keyboard,
+  useWindowDimensions,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
@@ -16,6 +17,7 @@ import { useRoute } from "@react-navigation/native";
 import db from "../../../firebase/config";
 import { globalStyle } from "../../../styles/style";
 import { ImagePost } from "../../../components/ImagePost";
+import { toDateTime } from "../../../functions";
 
 export function CommentsScreen() {
   const route = useRoute();
@@ -23,12 +25,19 @@ export function CommentsScreen() {
   const [comment, setComment] = useState("");
   const { nickName } = useSelector((state) => state.auth);
   const { postId, photo } = route.params;
+  const flatListRef = useRef();
+  const { height, width } = useWindowDimensions();
+
+  const vertical = width < 600;
 
   useEffect(() => {
     getAllPosts();
   }, []);
 
   const createPost = async () => {
+    if (!comment) {
+      return;
+    }
     await db
       .firestore()
       .collection("posts")
@@ -48,6 +57,7 @@ export function CommentsScreen() {
         countComments: (allComments.length += 1),
       });
 
+    Keyboard.dismiss();
     setComment("");
   };
 
@@ -56,32 +66,76 @@ export function CommentsScreen() {
       .collection("posts")
       .doc(postId)
       .collection("comments")
-      .onSnapshot((data) =>
-        setAllComments(
-          data.docs.map((doc) => ({
+      .onSnapshot((data) => {
+        const comments = data.docs
+          .map((doc) => ({
             ...doc.data(),
             id: doc.id,
           }))
-        )
-      );
+          .sort((a, b) => a.date.seconds - b.date.seconds);
+        setAllComments(comments);
+      });
   };
 
   return (
     <View style={styles.container}>
-      <ImagePost photo={photo} />
+      {vertical && (
+        <View style={styles.boxImage}>
+          <ImagePost photo={photo} />
+        </View>
+      )}
       <SafeAreaView style={styles.commentsContainer}>
         <FlatList
+          ref={flatListRef}
+          onLayout={() =>
+            flatListRef.current.scrollToEnd({
+              animated: true,
+            })
+          }
           data={allComments}
-          renderItem={({ item }) => (
-            <View style={styles.comment}>
-              <Text style={styles.commentNick}>
+          renderItem={({ item, index }) => (
+            <View
+              style={{
+                ...styles.comment,
+                flexDirection:
+                  index % 2 === 0 ? "row" : "row-reverse",
+              }}
+            >
+              <Text
+                style={{
+                  ...styles.commentNick,
+                  marginRight: index % 2 === 0 ? 16 : 0,
+                  marginLeft: index % 2 !== 0 ? 16 : 0,
+                }}
+              >
                 {item.nickName}
               </Text>
-              <View style={styles.commentBox}>
-                <Text style={styles.commentText}>
+              <View
+                style={{
+                  ...styles.commentBox,
+                  borderTopLeftRadius:
+                    index % 2 === 0 ? 0 : 6,
+                  borderTopRightRadius:
+                    index % 2 !== 0 ? 0 : 6,
+                }}
+              >
+                <Text
+                  style={{
+                    ...styles.commentText,
+                    ...globalStyle.mainText,
+                  }}
+                >
                   {item.comment}
                 </Text>
-                {/* <Text>{item.date.toString()}</Text> */}
+                <Text
+                  style={{
+                    ...globalStyle.placeholder,
+                    textAlign:
+                      index % 2 === 0 ? "right" : "left",
+                  }}
+                >
+                  {toDateTime(item.date.seconds)}
+                </Text>
               </View>
             </View>
           )}
@@ -130,30 +184,25 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginBottom: 32,
   },
-  image: {
-    height: 240,
-    borderRadius: 8,
-  },
   commentsContainer: {
     flex: 1,
     marginBottom: 32,
   },
   comment: {
-    flexDirection: "row",
     paddingHorizontal: 16,
     marginBottom: 24,
   },
-  commentNick: {
-    marginRight: 16,
-  },
+  commentNick: {},
   commentBox: {
     flexGrow: 1,
+    flexShrink: 1,
     padding: 16,
     borderRadius: 6,
-    borderTopLeftRadius: 0,
     backgroundColor: globalStyle.backgrounds.comment,
   },
-  commentText: {},
+  commentText: {
+    marginBottom: 8,
+  },
   boxInput: {
     position: "relative",
     paddingHorizontal: 16,

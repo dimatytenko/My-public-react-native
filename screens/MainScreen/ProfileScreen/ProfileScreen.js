@@ -5,6 +5,7 @@ import {
   View,
   StyleSheet,
   ImageBackground,
+  useWindowDimensions,
 } from "react-native";
 
 import db from "../../../firebase/config";
@@ -17,11 +18,9 @@ export function ProfileScreen() {
   const { userId, nickName } = useSelector(
     (state) => state.auth
   );
-  const { dimensions } = useSelector(
-    (state) => state.tools
-  );
+  const { height, width } = useWindowDimensions();
 
-  const horizontal = dimensions < 600;
+  const horizontal = width < 600;
 
   useEffect(() => {
     getUserPosts();

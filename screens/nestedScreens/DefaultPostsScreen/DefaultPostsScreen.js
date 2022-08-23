@@ -11,19 +11,23 @@ export function DefaultPostsScreen() {
   const { email, nickName } = useSelector(
     (state) => state.auth
   );
+  console.log(posts);
 
   const getAllPost = async () => {
     await db
       .firestore()
       .collection("posts")
-      .onSnapshot((data) =>
-        setPosts(
-          data.docs.map((doc) => ({
+      .onSnapshot((data) => {
+        const posts = data.docs
+          .map((doc) => ({
             ...doc.data(),
             id: doc.id,
           }))
-        )
-      );
+          .sort(
+            (a, b) => b?.date?.seconds - a?.date?.seconds
+          );
+        setPosts(posts);
+      });
   };
 
   useEffect(() => {
@@ -46,7 +50,9 @@ export function DefaultPostsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    backgroundColor: globalStyle.backgrounds.page,
+  },
   owner: {
     paddingHorizontal: 16,
     marginTop: 24,

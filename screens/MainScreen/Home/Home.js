@@ -3,8 +3,8 @@ import { Text, StyleSheet, View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   Feather,
-  MaterialCommunityIcons,
-  MaterialIcons,
+  Ionicons,
+  AntDesign,
 } from "@expo/vector-icons";
 
 import { CreatePostsScreen } from "../CreatePostsScreen";
@@ -24,11 +24,24 @@ export function Home() {
             tabBarShowLabel: false,
 
             tabBarIcon: ({ focused, size, color }) => (
-              <MaterialIcons
-                name="post-add"
-                size={size}
-                color={color}
-              />
+              <View
+                style={{
+                  ...styles.buttonTab,
+                  backgroundColor: focused
+                    ? globalStyle.backgrounds.button
+                    : "transparrent",
+                }}
+              >
+                <AntDesign
+                  name="appstore-o"
+                  size={26}
+                  color={
+                    focused
+                      ? globalStyle.colors.fontButton
+                      : globalStyle.colors.fontPrimary
+                  }
+                />
+              </View>
             ),
           }}
           name="Posts"
@@ -44,11 +57,24 @@ export function Home() {
             },
 
             tabBarIcon: ({ focused, size, color }) => (
-              <Feather
-                name="plus"
-                size={size}
-                color={color}
-              />
+              <View
+                style={{
+                  ...styles.buttonTab,
+                  backgroundColor: focused
+                    ? globalStyle.backgrounds.button
+                    : "transparrent",
+                }}
+              >
+                <Feather
+                  name="plus"
+                  size={30}
+                  color={
+                    focused
+                      ? globalStyle.colors.fontButton
+                      : globalStyle.colors.fontPrimary
+                  }
+                />
+              </View>
             ),
           }}
           name="CreatePosts"
@@ -60,11 +86,24 @@ export function Home() {
             headerShown: false,
 
             tabBarIcon: ({ focused, size, color }) => (
-              <MaterialCommunityIcons
-                name="face-man-profile"
-                size={size}
-                color={color}
-              />
+              <View
+                style={{
+                  ...styles.buttonTab,
+                  backgroundColor: focused
+                    ? globalStyle.backgrounds.button
+                    : "transparrent",
+                }}
+              >
+                <Ionicons
+                  name="person-outline"
+                  size={26}
+                  color={
+                    focused
+                      ? globalStyle.colors.fontButton
+                      : globalStyle.colors.fontPrimary
+                  }
+                />
+              </View>
             ),
           }}
           name="Profile"
@@ -77,5 +116,12 @@ export function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  buttonTab: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: 70,
+    height: 40,
+    borderRadius: 20,
   },
 });
