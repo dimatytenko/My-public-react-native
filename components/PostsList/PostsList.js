@@ -4,7 +4,6 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
-  useWindowDimensions,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
@@ -18,9 +17,7 @@ import { ImagePost } from "../../components/ImagePost";
 
 export function PostsList({ posts }) {
   const navigation = useNavigation();
-  const { height, width } = useWindowDimensions();
   const { userId } = useSelector((state) => state.auth);
-  console.log(posts);
 
   const changeLike = async (postId) => {
     const post = await posts.find(

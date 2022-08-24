@@ -1,5 +1,4 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-// import { Ionicons } from "@expo/vector-icons";
 
 import { DefaultPostsScreen } from "../../nestedScreens/DefaultPostsScreen/DefaultPostsScreen";
 import { CommentsScreen } from "../../nestedScreens/CommentsScreen/CommentsScreen";

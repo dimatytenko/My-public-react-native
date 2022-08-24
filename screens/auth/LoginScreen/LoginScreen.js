@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import PropTypes from "prop-types";
 import {
-  StyleSheet,
   Text,
   View,
   TextInput,
@@ -184,5 +182,3 @@ export function LoginScreen() {
     </TouchableWithoutFeedback>
   );
 }
-
-LoginScreen.propTypes = {};

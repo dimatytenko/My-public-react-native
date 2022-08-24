@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import validator from "validator";
-import PropTypes from "prop-types";
 import {
   StyleSheet,
   Text,
@@ -68,7 +67,6 @@ export function RegistrationScreen() {
     } else {
       setIsShowKeyboard(false);
       Keyboard.dismiss();
-      console.log(state);
       dispatch(authSignUpUser(state));
       setState(initialState);
     }

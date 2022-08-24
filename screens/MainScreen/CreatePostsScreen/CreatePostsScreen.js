@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TextInput,
   Image,
+  ScrollView,
 } from "react-native";
 import { Camera, CameraType } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
@@ -143,131 +144,135 @@ export function CreatePostsScreen() {
   };
 
   return (
-    <View
-      style={{
-        ...globalStyle.screenContainer,
-        ...styles.container,
-      }}
-    >
-      <View style={styles.cameraWrap}>
-        {isFocused && (
-          <Camera
-            style={styles.camera}
-            type={type}
-            ref={(ref) => {
-              setCameraRef(ref);
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                setType(
-                  type === CameraType.back
-                    ? CameraType.front
-                    : CameraType.back
-                );
+    <ScrollView>
+      <View
+        style={{
+          ...globalStyle.screenContainer,
+          ...styles.container,
+        }}
+      >
+        <View style={styles.cameraWrap}>
+          {isFocused && (
+            <Camera
+              style={styles.camera}
+              type={type}
+              ref={(ref) => {
+                setCameraRef(ref);
               }}
-              activeOpacity={0.5}
-              style={styles.flipCamera}
             >
-              <MaterialIcons
-                name="flip-camera-ios"
-                size={24}
-                color="#ffffff"
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={takePhoto}
-              activeOpacity={0.5}
-              style={styles.snapContainer}
-            >
-              <Entypo
-                name="camera"
-                size={24}
-                color="#ffffff"
-              />
-            </TouchableOpacity>
-          </Camera>
-        )}
-      </View>
-
-      {prevPhoto && (
-        <View style={styles.takePhotoContainer}>
-          <Image
-            style={styles.image}
-            source={{ uri: prevPhoto }}
-          ></Image>
-          <View style={styles.boxPermissions}>
-            <TouchableOpacity
-              onPress={() => downloadPhoto(prevPhoto)}
-              activeOpacity={0.5}
-            >
-              <Text
-                style={{
-                  ...globalStyle.placeholder,
-                  ...styles.downloadButton,
+              <TouchableOpacity
+                onPress={() => {
+                  setType(
+                    type === CameraType.back
+                      ? CameraType.front
+                      : CameraType.back
+                  );
                 }}
+                activeOpacity={0.5}
+                style={styles.flipCamera}
               >
-                Завантажити фото
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={deletePhoto}
-              activeOpacity={0.5}
-            >
-              <Text
-                style={{
-                  ...globalStyle.placeholder,
-                  ...styles.downloadButton,
-                }}
+                <MaterialIcons
+                  name="flip-camera-ios"
+                  size={24}
+                  color="#ffffff"
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={takePhoto}
+                activeOpacity={0.5}
+                style={styles.snapContainer}
               >
-                Видалити фото
-              </Text>
-            </TouchableOpacity>
-          </View>
+                <Entypo
+                  name="camera"
+                  size={24}
+                  color="#ffffff"
+                />
+              </TouchableOpacity>
+            </Camera>
+          )}
         </View>
-      )}
 
-      <View style={styles.commentInputView}>
-        <TextInput
-          style={{
-            ...styles.input,
-            ...globalStyle.mainText,
-          }}
-          onChangeText={setComment}
-          value={comment}
-          placeholder="Назва..."
-          placeholderTextColor={
-            globalStyle.colors.fontSecondary
-          }
-        />
-      </View>
-      <View style={styles.placeInputView}>
-        <TextInput
-          style={{
-            ...styles.input,
-            ...globalStyle.mainText,
-            paddingLeft: 28,
-          }}
-          onChangeText={setPlace}
-          value={place}
-          placeholder="Місцевість..."
-          placeholderTextColor={
-            globalStyle.colors.fontSecondary
-          }
-        />
-        <View style={styles.iconLocation}>
-          <Ionicons
-            name="ios-location-outline"
-            size={24}
-            color={globalStyle.colors.fontSecondary}
+        {prevPhoto && (
+          <View style={styles.takePhotoContainer}>
+            <Image
+              style={styles.image}
+              source={{ uri: prevPhoto }}
+            ></Image>
+            <View style={styles.boxPermissions}>
+              <TouchableOpacity
+                onPress={() => downloadPhoto(prevPhoto)}
+                activeOpacity={0.5}
+              >
+                <Text
+                  style={{
+                    ...globalStyle.placeholder,
+                    ...styles.downloadButton,
+                  }}
+                >
+                  Завантажити фото
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={deletePhoto}
+                activeOpacity={0.5}
+              >
+                <Text
+                  style={{
+                    ...globalStyle.placeholder,
+                    ...styles.downloadButton,
+                  }}
+                >
+                  Видалити фото
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+
+        <View style={styles.commentInputView}>
+          <TextInput
+            style={{
+              ...styles.input,
+              ...globalStyle.mainText,
+            }}
+            onChangeText={setComment}
+            value={comment}
+            placeholder="Назва..."
+            placeholderTextColor={
+              globalStyle.colors.fontSecondary
+            }
           />
         </View>
+        <View style={styles.placeInputView}>
+          <TextInput
+            style={{
+              ...styles.input,
+              ...globalStyle.mainText,
+              paddingLeft: 28,
+            }}
+            onChangeText={setPlace}
+            value={place}
+            placeholder="Місцевість..."
+            placeholderTextColor={
+              globalStyle.colors.fontSecondary
+            }
+          />
+          <View style={styles.iconLocation}>
+            <Ionicons
+              name="ios-location-outline"
+              size={24}
+              color={globalStyle.colors.fontSecondary}
+            />
+          </View>
+        </View>
+        <View style={styles.boxButton}>
+          <CustomButton
+            onPress={sendPost}
+            text={"Публікувати"}
+          ></CustomButton>
+        </View>
       </View>
-      <CustomButton
-        onPress={sendPost}
-        text={"Публікувати"}
-      ></CustomButton>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -340,5 +345,8 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255, 255, 255, 0.3)",
     justifyContent: "center",
     alignItems: "center",
+  },
+  boxButton: {
+    marginBottom: 16,
   },
 });

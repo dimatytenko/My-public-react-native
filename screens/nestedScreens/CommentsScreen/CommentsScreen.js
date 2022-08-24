@@ -31,7 +31,7 @@ export function CommentsScreen() {
   const vertical = width < 600;
 
   useEffect(() => {
-    getAllPosts();
+    getAllComments(postId);
   }, []);
 
   const createPost = async () => {
@@ -61,7 +61,7 @@ export function CommentsScreen() {
     setComment("");
   };
 
-  const getAllPosts = async () => {
+  const getAllComments = async () => {
     db.firestore()
       .collection("posts")
       .doc(postId)
