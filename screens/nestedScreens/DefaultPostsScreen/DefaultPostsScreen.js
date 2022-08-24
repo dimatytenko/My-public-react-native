@@ -11,7 +11,6 @@ export function DefaultPostsScreen() {
   const { email, nickName } = useSelector(
     (state) => state.auth
   );
-  console.log(posts);
 
   const getAllPost = async () => {
     await db

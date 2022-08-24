@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+// import validator from "validator";
 import PropTypes from "prop-types";
 import {
   StyleSheet,
@@ -12,12 +13,14 @@ import {
   Platform,
   ImageBackground,
   TouchableWithoutFeedback,
+  useWindowDimensions,
+  Alert,
+  Vibration,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 import { CustomButton } from "../../../components/CustomButton";
 import { globalStyle, auth } from "../../../styles/style";
-import { chengePaddingBottom } from "../../../functions";
 import { authSignUpUser } from "../../../redux/auth/authOperations";
 
 const initialState = {
@@ -26,20 +29,41 @@ const initialState = {
   password: "",
 };
 
-export function RegistrationScreen({ dimensions }) {
+export function RegistrationScreen() {
   const [isShowKeyboard, setIsShowKeyboard] =
     useState(false);
   const [state, setState] = useState(initialState);
   const [isSecurity, setIsSecurity] = useState(true);
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const { height, width } = useWindowDimensions();
+
+  const vertical = width < 600;
 
   function onSubmit() {
-    setIsShowKeyboard(false);
-    Keyboard.dismiss();
-    console.log(state);
-    dispatch(authSignUpUser(state));
-    setState(initialState);
+    if (
+      !state.email ||
+      !state.nickName ||
+      !state.password
+    ) {
+      Vibration.vibrate();
+      Alert.alert("Увага", "Заповніть всі поля");
+      return;
+    }
+    if (state.password.trim().length < 8) {
+      Vibration.vibrate();
+      Alert.alert(
+        "Увага",
+        "Пароль має бути мінімум 8 сивмолів"
+      );
+      return;
+    } else {
+      setIsShowKeyboard(false);
+      Keyboard.dismiss();
+      console.log(state);
+      dispatch(authSignUpUser(state));
+      setState(initialState);
+    }
   }
 
   return (
@@ -57,10 +81,7 @@ export function RegistrationScreen({ dimensions }) {
           style={{
             ...auth.page,
             ...globalStyle.container,
-            paddingBottom: chengePaddingBottom(
-              isShowKeyboard,
-              dimensions
-            ),
+            paddingBottom: vertical ? 92 : 16,
           }}
         >
           <View>
@@ -84,10 +105,10 @@ export function RegistrationScreen({ dimensions }) {
                   ...auth.input,
                 }}
                 placeholder={"Логін"}
+                maxLength={8}
                 placeholderTextColor={
                   globalStyle.colors.fontSecondary
                 }
-                maxLength={16}
                 onFocus={() => {
                   setIsShowKeyboard(true);
                 }}
@@ -127,7 +148,7 @@ export function RegistrationScreen({ dimensions }) {
                 placeholderTextColor={
                   globalStyle.colors.fontSecondary
                 }
-                maxLength={16}
+                maxLength={12}
                 onFocus={() => setIsShowKeyboard(true)}
                 secureTextEntry={isSecurity}
                 icon={<Text>Показати</Text>}
@@ -165,7 +186,8 @@ export function RegistrationScreen({ dimensions }) {
             onPress={() => navigation.navigate("Login")}
           >
             <Text style={auth.linkText}>
-              Уже маєте акаунт? Увійти
+              Уже маєте акаунт?{" "}
+              <Text style={auth.textMod}>Увійти</Text>
             </Text>
           </TouchableOpacity>
         </View>

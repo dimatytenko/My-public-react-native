@@ -109,4 +109,7 @@ export const auth = StyleSheet.create({
     lineHeight: 19,
     color: globalStyle.colors.fontMod,
   },
+  textMod: {
+    color: globalStyle.colors.borderInputActive,
+  },
 });

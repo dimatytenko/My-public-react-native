@@ -275,22 +275,13 @@ export function CreatePostsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // position: "relative",
-  },
-  header: {
-    paddingTop: 55,
-    paddingBottom: 11,
-    marginBottom: 45,
-    borderBottomWidth: 2,
-    borderBottomColor: globalStyle.colors.borderInput,
-    alignItems: "center",
   },
   cameraWrap: {
     borderRadius: 8,
     overflow: "hidden",
+    marginBottom: 32,
   },
   camera: {
-    // position: "relative",
     height: 240,
     alignItems: "center",
     justifyContent: "center",
@@ -310,24 +301,19 @@ const styles = StyleSheet.create({
   takePhotoContainer: {
     position: "absolute",
     width: "100%",
-    // paddingHorizontal: 16,
     top: 0,
     left: 16,
-
-    // borderRadius: 8,
-    // overflow: "hidden",
+  },
+  image: {
+    height: 240,
+    marginBottom: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 8,
   },
   boxPermissions: {
     flexDirection: "row",
     justifyContent: "space-between",
-  },
-
-  image: {
-    height: 240,
-    marginBottom: 8,
-
-    alignItems: "center",
-    justifyContent: "center",
   },
   downloadButton: {
     marginBottom: 32,

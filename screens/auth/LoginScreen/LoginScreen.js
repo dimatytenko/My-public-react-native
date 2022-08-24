@@ -12,32 +12,39 @@ import {
   Platform,
   ImageBackground,
   TouchableWithoutFeedback,
+  useWindowDimensions,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 import { CustomButton } from "../../../components/CustomButton";
 import { globalStyle, auth } from "../../../styles/style";
-import { chengePaddingBottom } from "../../../functions";
 import { authSignInUser } from "../../../redux/auth/authOperations";
 
 const initialState = {
   email: "",
   password: "",
 };
-export function LoginScreen({ dimensions }) {
+export function LoginScreen() {
   const [isShowKeyboard, setIsShowKeyboard] =
     useState(false);
   const [state, setState] = useState(initialState);
   const [isSecurity, setIsSecurity] = useState(true);
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const { height, width } = useWindowDimensions();
+
+  const vertical = width < 600;
 
   function onSubmit() {
-    setIsShowKeyboard(false);
-    Keyboard.dismiss();
-    console.log(state);
-    dispatch(authSignInUser(state));
-    setState(initialState);
+    if (!state.email || !state.password) {
+      return;
+    } else {
+      setIsShowKeyboard(false);
+      Keyboard.dismiss();
+      console.log(state);
+      dispatch(authSignInUser(state));
+      setState(initialState);
+    }
   }
 
   return (
@@ -56,10 +63,7 @@ export function LoginScreen({ dimensions }) {
             ...auth.page,
             ...globalStyle.container,
             paddingTop: 32,
-            paddingBottom: chengePaddingBottom(
-              isShowKeyboard,
-              dimensions
-            ),
+            paddingBottom: vertical ? 92 : 16,
           }}
         >
           <View>
@@ -100,10 +104,10 @@ export function LoginScreen({ dimensions }) {
               <TextInput
                 style={auth.input}
                 placeholder={"Пароль"}
+                maxLength={16}
                 placeholderTextColor={
                   globalStyle.colors.fontSecondary
                 }
-                maxLength={16}
                 onFocus={() => setIsShowKeyboard(true)}
                 secureTextEntry={isSecurity}
                 icon={<Text>Показати</Text>}
@@ -141,7 +145,10 @@ export function LoginScreen({ dimensions }) {
             onPress={() => navigation.navigate("Register")}
           >
             <Text style={auth.linkText}>
-              Немає акаунта? Зареєструватися
+              Немає акаунта?{" "}
+              <Text style={auth.textMod}>
+                Зареєструватися
+              </Text>
             </Text>
           </TouchableOpacity>
         </View>
