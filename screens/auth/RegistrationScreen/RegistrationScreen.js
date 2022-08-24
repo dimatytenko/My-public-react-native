@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-// import validator from "validator";
+import validator from "validator";
 import PropTypes from "prop-types";
 import {
   StyleSheet,
@@ -48,6 +48,14 @@ export function RegistrationScreen() {
     ) {
       Vibration.vibrate();
       Alert.alert("Увага", "Заповніть всі поля");
+      return;
+    }
+    if (!validator.isEmail(state.email.trim())) {
+      Vibration.vibrate();
+      Alert.alert(
+        "Увага",
+        "Некоректний пароль, використовуйте приклад name@bar.com"
+      );
       return;
     }
     if (state.password.trim().length < 8) {

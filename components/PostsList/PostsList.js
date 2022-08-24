@@ -10,6 +10,7 @@ import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import { useSelector } from "react-redux";
 
 import { globalStyle } from "../../styles/style";
 import db from "../../firebase/config";
@@ -18,26 +19,29 @@ import { ImagePost } from "../../components/ImagePost";
 export function PostsList({ posts }) {
   const navigation = useNavigation();
   const { height, width } = useWindowDimensions();
+  const { userId } = useSelector((state) => state.auth);
+  console.log(posts);
 
   const changeLike = async (postId) => {
-    const post = posts.find((post) => post.id === postId);
+    const post = await posts.find(
+      (post) => post.id === postId
+    );
+
+    const isLike = await post.countLike.includes(userId);
+
+    let likeArray = post.countLike;
+    if (!isLike) {
+      likeArray = [...likeArray, userId];
+    } else {
+      likeArray = likeArray.filter((el) => el !== userId);
+    }
 
     await db
       .firestore()
       .collection("posts")
       .doc(postId)
       .update({
-        countLike: post.isLike
-          ? (post.countLike -= 1)
-          : (post.countLike += 1),
-      });
-
-    await db
-      .firestore()
-      .collection("posts")
-      .doc(postId)
-      .update({
-        isLike: !post.isLike,
+        countLike: likeArray,
       });
   };
 
@@ -96,7 +100,7 @@ export function PostsList({ posts }) {
               activeOpacity={0.7}
             >
               <View style={styles.iconBottomPost}>
-                {(item.isLike && (
+                {(item.countLike.includes(userId) && (
                   <AntDesign
                     name="like1"
                     size={24}
@@ -118,7 +122,7 @@ export function PostsList({ posts }) {
                   ...globalStyle.mainText,
                 }}
               >
-                {item.countLike}
+                {item.countLike.length}
               </Text>
             </TouchableOpacity>
 

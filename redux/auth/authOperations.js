@@ -1,8 +1,12 @@
 import db from "../../firebase/config";
 import { authSlice } from "./authReducer";
 
-const { updateUserProfile, authStateChange, authSignOut } =
-  authSlice.actions;
+const {
+  updateUserProfile,
+  authStateChange,
+  authSignOut,
+  authLoginError,
+} = authSlice.actions;
 
 export const authSignUpUser =
   ({ email, password, nickName }) =>
@@ -30,7 +34,6 @@ export const authSignUpUser =
       );
     } catch (error) {
       console.log("error", error);
-      console.log("error.message", error.message);
     }
   };
 
@@ -44,8 +47,7 @@ export const authSignInUser =
       console.log("user", user);
     } catch (error) {
       console.log("error", error);
-      console.log("error.code", error.code);
-      console.log("error.message", error.message);
+      dispatch(authLoginError());
     }
   };
 

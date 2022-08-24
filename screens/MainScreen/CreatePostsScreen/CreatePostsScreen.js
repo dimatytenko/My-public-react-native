@@ -121,8 +121,7 @@ export function CreatePostsScreen() {
       location,
       userId,
       nickName,
-      isLike: false,
-      countLike: 0,
+      countLike: [],
       date: new Date(),
     });
   };

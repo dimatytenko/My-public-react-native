@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import {
   StyleSheet,
@@ -13,8 +13,11 @@ import {
   ImageBackground,
   TouchableWithoutFeedback,
   useWindowDimensions,
+  Alert,
+  Vibration,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import validator from "validator";
 
 import { CustomButton } from "../../../components/CustomButton";
 import { globalStyle, auth } from "../../../styles/style";
@@ -31,19 +34,44 @@ export function LoginScreen() {
   const [isSecurity, setIsSecurity] = useState(true);
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const { errorLogin } = useSelector((state) => state.auth);
   const { height, width } = useWindowDimensions();
 
   const vertical = width < 600;
 
   function onSubmit() {
     if (!state.email || !state.password) {
+      Vibration.vibrate();
+      Alert.alert("Увага", "Заповніть всі поля");
+      return;
+    }
+    if (!validator.isEmail(state.email.trim())) {
+      Vibration.vibrate();
+      Alert.alert(
+        "Увага",
+        "Некоректний пароль, використовуйте приклад name@bar.com"
+      );
+      return;
+    }
+    if (state.password.trim().length < 8) {
+      Vibration.vibrate();
+      Alert.alert(
+        "Увага",
+        "Пароль має бути мінімум 8 сивмолів"
+      );
       return;
     } else {
-      setIsShowKeyboard(false);
-      Keyboard.dismiss();
-      console.log(state);
       dispatch(authSignInUser(state));
-      setState(initialState);
+
+      if (errorLogin) {
+        Vibration.vibrate();
+        Alert.alert("Увага", "Такого користувача не існує");
+        return;
+      } else {
+        setIsShowKeyboard(false);
+        Keyboard.dismiss();
+        setState(initialState);
+      }
     }
   }
 

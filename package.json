@@ -17,8 +17,9 @@
     "@react-navigation/native-stack": "^6.7.0",
     "@react-navigation/stack": "^6.2.2",
     "@reduxjs/toolkit": "^1.8.4",
+    "date-fns": "^2.29.2",
     "expo": "~45.0.0",
-    "expo-app-loading": "^2.0.0",
+    "expo-app-loading": "~2.0.0",
     "expo-camera": "~12.2.0",
     "expo-font": "~10.1.0",
     "expo-location": "~14.2.2",
@@ -35,7 +36,9 @@
     "react-native-screens": "~3.11.1",
     "react-native-web": "0.17.7",
     "react-navigation": "^4.4.4",
-    "react-redux": "^8.0.2"
+    "react-redux": "^8.0.2",
+    "validator": "^13.7.0",
+    "expo-updates": "~0.13.4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
