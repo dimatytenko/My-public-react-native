@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 import {
   View,
   Text,
@@ -154,6 +156,10 @@ export function PostsList({ posts }) {
     />
   );
 }
+
+PostsList.propTypes = {
+  posts: PropTypes.array.isRequired,
+};
 
 const styles = StyleSheet.create({
   post: {

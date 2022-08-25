@@ -1,4 +1,5 @@
 import { View, Image, StyleSheet } from "react-native";
+import PropTypes from "prop-types";
 
 export function ImagePost({ photo }) {
   return (
@@ -7,6 +8,10 @@ export function ImagePost({ photo }) {
     </View>
   );
 }
+
+ImagePost.propTypes = {
+  photo: PropTypes.string.isRequired,
+};
 
 const styles = StyleSheet.create({
   boxImage: {
