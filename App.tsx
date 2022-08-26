@@ -1,11 +1,10 @@
 import { useEffect, useState, useCallback } from "react";
 import { Provider } from "react-redux";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, ViewStyle } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 
-import { globalStyle } from "./styles/style";
 import { store } from "./redux/store";
 import { Main } from "./components/Main";
 
@@ -38,6 +37,7 @@ export default function App() {
     return null;
   }
 
+
   return (
     <View onLayout={onLayout} style={styles.container}>
       <Provider store={store}>
@@ -48,9 +48,13 @@ export default function App() {
   );
 }
 
-const styles = StyleSheet.create({
+interface IStyles {
+  container: ViewStyle
+  
+}
+
+const styles = StyleSheet.create<IStyles>({
   container: {
     flex: 1,
-    backgroundColor: globalStyle.backgrounds.page,
   },
 });

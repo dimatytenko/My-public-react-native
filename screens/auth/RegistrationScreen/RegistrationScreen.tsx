@@ -29,13 +29,13 @@ const initialState = {
 };
 
 export function RegistrationScreen() {
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const { height, width } = useWindowDimensions();
   const [isShowKeyboard, setIsShowKeyboard] =
     useState(false);
   const [state, setState] = useState(initialState);
   const [isSecurity, setIsSecurity] = useState(true);
-  const navigation = useNavigation();
-  const dispatch = useDispatch();
-  const { height, width } = useWindowDimensions();
 
   const vertical = width < 600;
 
@@ -156,8 +156,8 @@ export function RegistrationScreen() {
                 }
                 maxLength={12}
                 onFocus={() => setIsShowKeyboard(true)}
-                secureTextEntry={isSecurity}
                 icon={<Text>Показати</Text>}
+                secureTextEntry={isSecurity}
                 iconPosition="right"
                 value={state.password}
                 onChangeText={(value) =>
@@ -178,12 +178,12 @@ export function RegistrationScreen() {
                 </Text>
               </TouchableOpacity>
             </View>
-
-            <CustomButton
-              style={{ marginBottom: 16 }}
+            <View style={{ marginBottom: 16 }}>
+              <CustomButton
               text={"Зареєструватися"}
               onPress={onSubmit}
-            />
+              />
+            </View>
           </KeyboardAvoidingView>
 
           <TouchableOpacity

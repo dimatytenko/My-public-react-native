@@ -6,11 +6,30 @@ import db from "../../../firebase/config";
 import { PostsList } from "../../../components/PostsList";
 import { globalStyle } from "../../../styles/style";
 
+ interface TCurrentPost{
+    photo: string,
+    comment: string,
+    countComments: number,
+    place: string,
+    location: ICoords | null,
+    userId: string,
+    nickName: string,
+    countLike:string[],
+    date: object,
+    id?: string
+  }
+
+    interface ICoords{
+      latitude: number,
+      longitude: number
+    }
 export function DefaultPostsScreen() {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<TCurrentPost[] | []>([]);
   const { email, nickName } = useSelector(
     (state) => state.auth
   );
+
+  console.log(posts)
 
   const getAllPost = async () => {
     await db
@@ -23,7 +42,7 @@ export function DefaultPostsScreen() {
             id: doc.id,
           }))
           .sort(
-            (a, b) => b?.date?.seconds - a?.date?.seconds
+            (a, b) => b.date.seconds - a.date.seconds
           );
         setPosts(posts);
       });

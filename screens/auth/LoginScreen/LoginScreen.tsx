@@ -157,12 +157,12 @@ export function LoginScreen() {
                 </Text>
               </TouchableOpacity>
             </View>
-
-            <CustomButton
-              style={{ marginBottom: 16 }}
+            <View style={{ marginBottom: 16 }}>
+              <CustomButton
               text={"Зареєструватися"}
               onPress={onSubmit}
-            />
+              />
+              </View>
           </KeyboardAvoidingView>
 
           <TouchableOpacity

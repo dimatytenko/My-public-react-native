@@ -1,1 +1,1 @@
-export * from "./toDateTime.js";
+export * from "./toDateTime";

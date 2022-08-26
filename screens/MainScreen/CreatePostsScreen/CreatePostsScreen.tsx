@@ -4,7 +4,6 @@ import {
   Text,
   TouchableOpacity,
   View,
-  StyleSheet,
   TextInput,
   Image,
   ScrollView,
@@ -17,24 +16,29 @@ import * as Location from "expo-location";
 import { Ionicons } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
 
+import {styles} from './stylesCreatePostScreen';
 import { globalStyle } from "../../../styles/style";
 import { CustomButton } from "../../../components/CustomButton";
 import db from "../../../firebase/config";
+import {ICoords, TCurrentPost} from '../../../interfaces';
 
+
+
+    
 export function CreatePostsScreen() {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
-  const [hasPermission, setHasPermission] = useState(null);
-  const [cameraRef, setCameraRef] = useState(null);
-  const [location, setLocation] = useState(null);
-  const [type, setType] = useState(CameraType.back);
-  const [prevPhoto, setPrevPhoto] = useState(null);
-  const [photo, setPhoto] = useState(null);
-  const [comment, setComment] = useState("");
-  const [place, setPlace] = useState("");
   const { userId, nickName } = useSelector(
     (state) => state.auth
   );
+  const [hasPermission, setHasPermission] = useState(false);
+  const [cameraRef, setCameraRef] = useState<Camera | null>(null);
+  const [location, setLocation] = useState<ICoords | null>(null);
+  const [type, setType] = useState(CameraType.back);
+  const [prevPhoto, setPrevPhoto] = useState<string | null>(null);
+  const [photo, setPhoto] = useState('');
+  const [comment, setComment] = useState("");
+  const [place, setPlace] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -72,23 +76,24 @@ export function CreatePostsScreen() {
     }
   };
 
-  const downloadPhoto = async (uri) => {
+   const deletePhoto = async () => {
+    setPrevPhoto(null);
+  };
+
+  const downloadPhoto = async (uri:string) => {
     await MediaLibrary.createAssetAsync(uri);
 
     let location = await Location.getCurrentPositionAsync(
       {}
     );
-    const coords = {
+
+      const coords: ICoords = {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
     };
 
     setLocation(coords);
     setPhoto(uri);
-    setPrevPhoto(null);
-  };
-
-  const deletePhoto = async () => {
     setPrevPhoto(null);
   };
 
@@ -112,9 +117,12 @@ export function CreatePostsScreen() {
     return processedPhoto;
   };
 
+
   const uploadPostToServer = async () => {
-    const photo = await uploadPhotoToServer();
-    await db.firestore().collection("posts").add({
+    const photo: string = await uploadPhotoToServer();
+
+
+    const currentPost: TCurrentPost = {
       photo,
       comment,
       countComments: 0,
@@ -122,23 +130,19 @@ export function CreatePostsScreen() {
       location,
       userId,
       nickName,
-      countLike: [],
+      countLike:[],
       date: new Date(),
-    });
+    }    
+    await db.firestore().collection("posts").add(currentPost);
   };
 
   const sendPost = () => {
     if (!photo) {
       return;
     }
+    navigation.navigate("DefaultScreen");
     uploadPostToServer();
-    navigation.navigate("DefaultScreen", {
-      photo,
-      location,
-      comment,
-      place,
-    });
-    setPhoto(null);
+    setPhoto('');
     setComment("");
     setPlace("");
   };
@@ -264,7 +268,7 @@ export function CreatePostsScreen() {
               color={globalStyle.colors.fontSecondary}
             />
           </View>
-        </View>
+        </View> 
         <View style={styles.boxButton}>
           <CustomButton
             onPress={sendPost}
@@ -276,77 +280,3 @@ export function CreatePostsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  cameraWrap: {
-    borderRadius: 8,
-    overflow: "hidden",
-    marginBottom: 32,
-  },
-  camera: {
-    height: 240,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  flipCamera: {
-    position: "absolute",
-    top: 4,
-    right: 4,
-    width: 45,
-    height: 45,
-    borderRadius: 50,
-    backgroundColor: "rgba(255, 255, 255, 0.3)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  takePhotoContainer: {
-    position: "absolute",
-    width: "100%",
-    top: 0,
-    left: 16,
-  },
-  image: {
-    height: 240,
-    marginBottom: 8,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 8,
-  },
-  boxPermissions: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  downloadButton: {
-    marginBottom: 32,
-  },
-  commentInputView: {
-    marginBottom: 16,
-  },
-  placeInputView: {
-    marginBottom: 32,
-  },
-  input: {
-    paddingTop: 15,
-    paddingBottom: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: globalStyle.colors.borderInput,
-  },
-  iconLocation: {
-    position: "absolute",
-    top: 15,
-  },
-  snapContainer: {
-    width: 60,
-    height: 60,
-    borderRadius: 50,
-    backgroundColor: "rgba(255, 255, 255, 0.3)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  boxButton: {
-    marginBottom: 16,
-  },
-});

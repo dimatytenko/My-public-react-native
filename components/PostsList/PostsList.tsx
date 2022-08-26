@@ -1,11 +1,11 @@
-import PropTypes from "prop-types";
-
 import {
   View,
   Text,
   StyleSheet,
   FlatList,
   TouchableOpacity,
+    ViewStyle,
+  TextStyle,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
@@ -16,8 +16,14 @@ import { useSelector } from "react-redux";
 import { globalStyle } from "../../styles/style";
 import db from "../../firebase/config";
 import { ImagePost } from "../../components/ImagePost";
+import {TCurrentPost} from '../../interfaces';
 
-export function PostsList({ posts }) {
+interface IProps{
+  posts: TCurrentPost[]
+}
+
+
+export function PostsList({ posts }:IProps) {
   const navigation = useNavigation();
   const { userId } = useSelector((state) => state.auth);
 
@@ -157,11 +163,17 @@ export function PostsList({ posts }) {
   );
 }
 
-PostsList.propTypes = {
-  posts: PropTypes.array.isRequired,
-};
+interface IStyles{
+  post:ViewStyle,
+  place:TextStyle,
+  bottomPost:ViewStyle,
+  infoBottomPost:ViewStyle,
+  iconBottomPost:ViewStyle,
+  location:TextStyle,
+}
 
-const styles = StyleSheet.create({
+
+const styles = StyleSheet.create<IStyles>({
   post: {
     paddingHorizontal: 16,
     marginBottom: 32,

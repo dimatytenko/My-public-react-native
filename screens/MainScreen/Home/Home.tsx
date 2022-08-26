@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View,ViewStyle } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   Feather,
@@ -113,7 +113,13 @@ export function Home() {
     </View>
   );
 }
-const styles = StyleSheet.create({
+
+interface IStyle{
+  container: ViewStyle,
+  buttonTab: ViewStyle,
+}
+
+const styles = StyleSheet.create<IStyle>({
   container: {
     flex: 1,
   },

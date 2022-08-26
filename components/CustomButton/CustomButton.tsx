@@ -1,13 +1,20 @@
-import PropTypes from "prop-types";
+
 import {
   StyleSheet,
   TouchableOpacity,
   Text,
+  ViewStyle,
+  TextStyle
 } from "react-native";
 
 import { globalStyle } from "../../styles/style";
 
-export function CustomButton({ text, onPress }) {
+interface IProps {
+  text: string
+  onPress(): void
+}
+
+export function CustomButton({ text, onPress }:IProps) {
   return (
     <TouchableOpacity
       style={styles.btn}
@@ -17,14 +24,14 @@ export function CustomButton({ text, onPress }) {
       <Text style={styles.btnTitle}>{text}</Text>
     </TouchableOpacity>
   );
+} 
+
+interface IStyles {
+  btn: ViewStyle,
+  btnTitle: TextStyle
 }
 
-CustomButton.propTypes = {
-  text: PropTypes.string.isRequired,
-  onPress: PropTypes.func,
-};
-
-const styles = StyleSheet.create({
+const styles = StyleSheet.create<IStyles>({
   btn: {
     borderRadius: 100,
     backgroundColor: globalStyle.backgrounds.button,
@@ -35,5 +42,6 @@ const styles = StyleSheet.create({
   },
   btnTitle: {
     color: globalStyle.colors.fontButton,
+    
   },
 });

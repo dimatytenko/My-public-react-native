@@ -1,6 +1,22 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, TextStyle, ViewStyle, StyleProp } from "react-native";
 
-export const globalStyle = StyleSheet.create({
+interface IColors {
+  [key: string]: string;
+}
+
+interface IStylesGlobal {
+  container: ViewStyle,
+  screenContainer: ViewStyle,
+  colors: IColors,
+  backgrounds: IColors,
+  mainText: TextStyle,
+  mainBoldText: TextStyle,
+  mainTitle: TextStyle,
+  placeholder: TextStyle,
+  header: TextStyle,
+}
+
+export const globalStyle = StyleSheet.create<IStylesGlobal>({
   container: {
     paddingHorizontal: 16,
   },
@@ -54,7 +70,21 @@ export const globalStyle = StyleSheet.create({
   },
 });
 
-export const auth = StyleSheet.create({
+interface IStylesAuth {
+  page:ViewStyle,
+  input: TextStyle,
+  view: ViewStyle,
+  title: TextStyle
+  viewPassword: ViewStyle,
+  iconPasswordBox: ViewStyle,
+  iconPassword: TextStyle,
+  image: ViewStyle,
+  link: ViewStyle,
+  linkText:TextStyle,
+  textMod:TextStyle
+}
+
+export const auth = StyleSheet.create<IStylesAuth>({
   page: {
     backgroundColor: globalStyle.backgrounds.page,
     borderTopLeftRadius: 25,

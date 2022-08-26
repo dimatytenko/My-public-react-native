@@ -26,6 +26,8 @@ export function ProfileScreen() {
     getUserPosts();
   }, []);
 
+  
+
   const getUserPosts = async () => {
     await db
       .firestore()
