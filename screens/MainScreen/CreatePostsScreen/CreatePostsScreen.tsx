@@ -20,7 +20,7 @@ import {styles} from './stylesCreatePostScreen';
 import { globalStyle } from "../../../styles/style";
 import { CustomButton } from "../../../components/CustomButton";
 import db from "../../../firebase/config";
-import {ICoords, TCurrentPost} from '../../../interfaces';
+import {ICoord, IPost} from '../../../interfaces';
 
 
 
@@ -33,7 +33,7 @@ export function CreatePostsScreen() {
   );
   const [hasPermission, setHasPermission] = useState(false);
   const [cameraRef, setCameraRef] = useState<Camera | null>(null);
-  const [location, setLocation] = useState<ICoords | null>(null);
+  const [location, setLocation] = useState<ICoord | null>(null);
   const [type, setType] = useState(CameraType.back);
   const [prevPhoto, setPrevPhoto] = useState<string | null>(null);
   const [photo, setPhoto] = useState('');
@@ -87,7 +87,7 @@ export function CreatePostsScreen() {
       {}
     );
 
-      const coords: ICoords = {
+      const coords: IPost = {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
     };
@@ -122,7 +122,7 @@ export function CreatePostsScreen() {
     const photo: string = await uploadPhotoToServer();
 
 
-    const currentPost: TCurrentPost = {
+    const currentPost: IPost = {
       photo,
       comment,
       countComments: 0,

@@ -16,10 +16,10 @@ import { useSelector } from "react-redux";
 import { globalStyle } from "../../styles/style";
 import db from "../../firebase/config";
 import { ImagePost } from "../../components/ImagePost";
-import {TCurrentPost} from '../../interfaces';
+import {IPost} from '../../interfaces';
 
 interface IProps{
-  posts: TCurrentPost[]
+  posts: IPost[]
 }
 
 

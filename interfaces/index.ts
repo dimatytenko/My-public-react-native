@@ -1,14 +1,14 @@
-export interface ICoords {
+export interface ICoord  {
   latitude: number;
   longitude: number;
 }
 
-export interface TCurrentPost {
+export interface IPost  {
   photo: string;
   comment: string;
   countComments: number;
   place: string;
-  location: ICoords | null;
+  location: ICoord | null;
   userId: string;
   nickName: string;
   countLike: string[];
