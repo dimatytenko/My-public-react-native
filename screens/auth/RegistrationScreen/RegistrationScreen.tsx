@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import validator from "validator";
 import {
-  StyleSheet,
   Text,
   View,
   TextInput,
@@ -65,9 +64,9 @@ export function RegistrationScreen() {
       );
       return;
     } else {
+      (authSignUpUser(state)(dispatch));
       setIsShowKeyboard(false);
       Keyboard.dismiss();
-      dispatch(authSignUpUser(state));
       setState(initialState);
     }
   }
@@ -189,7 +188,7 @@ export function RegistrationScreen() {
           <TouchableOpacity
             style={auth.link}
             activeOpacity={0.7}
-            onPress={() => navigation.navigate("Login")}
+            onPress={() => navigation.navigate("Login" as never)}
           >
             <Text style={auth.linkText}>
               Уже маєте акаунт?{" "}
@@ -201,7 +200,3 @@ export function RegistrationScreen() {
     </TouchableWithoutFeedback>
   );
 }
-
-RegistrationScreen.propTypes = {};
-
-const styles = StyleSheet.create({});

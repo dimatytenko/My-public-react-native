@@ -1,15 +1,6 @@
 import { useDispatch } from "react-redux";
 import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
   TouchableOpacity,
-  KeyboardAvoidingView,
-  Keyboard,
-  Platform,
-  ImageBackground,
-  TouchableWithoutFeedback,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -22,7 +13,7 @@ export function LogOut() {
   return (
     <TouchableOpacity
       activeOpacity={0.7}
-      onPress={() => dispatch(authSignOutUser())}
+      onPress={()=> (authSignOutUser()(dispatch))}
     >
       <Ionicons
         name="log-out-outline"

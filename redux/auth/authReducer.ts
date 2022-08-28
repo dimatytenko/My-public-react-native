@@ -1,16 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
+import type { PayloadAction } from '@reduxjs/toolkit'
 
-interface IInitialState {
-  userId?: string | null;
-  nickName?: number|string | null;
-  email?: string | null;
-  stateChange?: boolean;
-  errorLogin?: boolean;
-}
-
-interface IUser{
-  email:string, password: string, nickName?: string
-}
+import {IInitialState, IUser} from '../../interfaces';
 
 const initialState:IInitialState = {
   userId: null,
@@ -24,20 +15,20 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    updateUserProfile: (state, { payload }) => ({
+    updateUserProfile: (state, { payload:{userId, nickName,email} }: PayloadAction<{ userId:string, nickName:string | null,email:string | null}>) => ({
       ...state,
-      userId: payload.userId,
-      nickName: payload.nickName,
-      email: payload.email,
+      userId: userId,
+      nickName: nickName,
+      email: email,
     }),
-    authStateChange: (state, { payload }) => ({
+    authStateChange: (state, { payload:{stateChange} }:PayloadAction<{stateChange: boolean}>) => ({
       ...state,
-      stateChange: payload.stateChange,
+      stateChange: stateChange,
     }),
     authSignOut: () => initialState,
-    authLoginError: (state, _) => ({
+    authLoginError: (state, {payload:{errorLogin}}:PayloadAction<{errorLogin:boolean}>) => ({
       ...state,
-      errorLogin: true,
+      errorLogin: errorLogin,
     }),
   },
 });

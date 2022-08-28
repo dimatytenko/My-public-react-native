@@ -8,6 +8,7 @@ import {
   TextStyle,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { createStackNavigator } from '@react-navigation/stack';
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
@@ -16,40 +17,47 @@ import { useSelector } from "react-redux";
 import { globalStyle } from "../../styles/style";
 import db from "../../firebase/config";
 import { ImagePost } from "../../components/ImagePost";
-import {IPost} from '../../interfaces';
-
+import { IPost,ICoord } from '../../interfaces';
+import { IRootReduser } from '../../redux/store';
 interface IProps{
   posts: IPost[]
 }
 
-
-export function PostsList({ posts }:IProps) {
+export function PostsList({ posts, }: IProps) {
   const navigation = useNavigation();
-  const { userId } = useSelector((state) => state.auth);
+  const { userId } = useSelector((state:IRootReduser) => state.auth);
 
-  const changeLike = async (postId) => {
-    const post = await posts.find(
+  const changeLike = async (postId:string):Promise<void> => {
+    const post = posts.find(
       (post) => post.id === postId
     );
+    
+    if (post && userId) {
+      const isLike = post.countLike.some(el=>el === userId);
+      let likeArray = post.countLike;
 
-    const isLike = await post.countLike.includes(userId);
-
-    let likeArray = post.countLike;
     if (!isLike) {
       likeArray = [...likeArray, userId];
     } else {
       likeArray = likeArray.filter((el) => el !== userId);
     }
-
+    
     await db
-      .firestore()
-      .collection("posts")
-      .doc(postId)
-      .update({
-        countLike: likeArray,
-      });
+    .firestore()
+    .collection("posts")
+    .doc(postId)
+    .update({
+      countLike: likeArray,
+    });
+  }
+  }
+  
+  type RootStackParamList = {
+  Home: undefined;
+  Profile: { postId: string, photo:string };
   };
-
+  const RootStack = createStackNavigator<RootStackParamList>();
+  
   return (
     <FlatList
       data={posts}
@@ -65,7 +73,7 @@ export function PostsList({ posts }:IProps) {
             <TouchableOpacity
               style={styles.infoBottomPost}
               onPress={() => {
-                navigation.navigate("Comments", {
+                navigation.navigate('Comments', {
                   postId: item.id,
                   photo: item.photo,
                 });
@@ -105,7 +113,7 @@ export function PostsList({ posts }:IProps) {
               activeOpacity={0.7}
             >
               <View style={styles.iconBottomPost}>
-                {(item.countLike.includes(userId) && (
+                {(item.countLike.some(el=>el === userId) && (
                   <AntDesign
                     name="like1"
                     size={24}
@@ -134,8 +142,8 @@ export function PostsList({ posts }:IProps) {
             <TouchableOpacity
               style={styles.infoBottomPost}
               onPress={() => {
-                navigation.navigate("Map", {
-                  location: item.location,
+                navigation.navigate("Map" as never, {
+                  location: item.location as ICoord,
                 });
               }}
               activeOpacity={0.7}
@@ -171,7 +179,6 @@ interface IStyles{
   iconBottomPost:ViewStyle,
   location:TextStyle,
 }
-
 
 const styles = StyleSheet.create<IStyles>({
   post: {

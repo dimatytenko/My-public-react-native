@@ -6,17 +6,19 @@ import {
   StyleSheet,
   ImageBackground,
   useWindowDimensions,
+  ViewStyle
 } from "react-native";
 
 import db from "../../../firebase/config";
 import { PostsList } from "../../../components/PostsList";
 import { globalStyle } from "../../../styles/style";
 import { LogOut } from "../../../components/LogOut";
+import {IRootReduser} from '../../../redux/store';
 
 export function ProfileScreen() {
   const [userPosts, setUserPosts] = useState([]);
   const { userId, nickName } = useSelector(
-    (state) => state.auth
+    (state:IRootReduser) => state.auth
   );
   const { height, width } = useWindowDimensions();
 
@@ -77,7 +79,14 @@ export function ProfileScreen() {
     </ImageBackground>
   );
 }
-const styles = StyleSheet.create({
+
+interface IStyles{
+  image: ViewStyle,
+  body: ViewStyle,
+  owner: ViewStyle,
+  logOut: ViewStyle,
+}
+const styles = StyleSheet.create<IStyles>({
   image: {
     flex: 1,
     resizeMode: "cover",
@@ -98,5 +107,4 @@ const styles = StyleSheet.create({
     right: 16,
     top: 22,
   },
-  posts: {},
 });

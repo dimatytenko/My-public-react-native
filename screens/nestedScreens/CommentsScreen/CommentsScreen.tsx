@@ -18,18 +18,27 @@ import db from "../../../firebase/config";
 import { globalStyle } from "../../../styles/style";
 import { ImagePost } from "../../../components/ImagePost";
 import { toDateTime } from "../../../functions";
+import { IRootReduser } from '../../../redux/store';
+
+interface IComment{
+  comment: string,
+  date: {seconds: number, nanoseconds: number},
+  id: string,
+  nickName: string | number| null
+}
 
 export function CommentsScreen() {
   const route = useRoute();
-  const [allComments, setAllComments] = useState([]);
-  const [comment, setComment] = useState("");
-  const { nickName } = useSelector((state) => state.auth);
-  const { postId, photo } = route.params;
   const flatListRef = useRef();
+  const [comment, setComment] = useState("");
+  const [allComments, setAllComments] = useState<IComment[] | []>([]);
+  const { nickName } = useSelector((state:IRootReduser) => state.auth);
+  const {postId,photo} = route.params
+  
   const { height, width } = useWindowDimensions();
-
+  
   const vertical = width < 600;
-
+ 
   useEffect(() => {
     getAllComments(postId);
   }, []);
@@ -61,10 +70,10 @@ export function CommentsScreen() {
     setComment("");
   };
 
-  const getAllComments = async () => {
+  const getAllComments = (Id: string) => {
     db.firestore()
       .collection("posts")
-      .doc(postId)
+      .doc(Id)
       .collection("comments")
       .onSnapshot((data) => {
         const comments = data.docs
@@ -158,7 +167,6 @@ export function CommentsScreen() {
         <TouchableOpacity
           activeOpacity={0.7}
           style={styles.arrowUpButton}
-          onPress={createPost}
         >
           <AntDesign
             name="arrowup"
@@ -182,10 +190,10 @@ const styles = StyleSheet.create({
   boxImage: {
     marginBottom: 8,
     paddingHorizontal: 16,
-    marginBottom: 32,
   },
   commentsContainer: {
     flex: 1,
+    marginTop:32,
     marginBottom: 32,
   },
   comment: {

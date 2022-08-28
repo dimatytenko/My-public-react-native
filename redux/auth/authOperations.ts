@@ -1,15 +1,7 @@
 import db from "../../firebase/config";
 import { authSlice } from "./authReducer";
 
-interface IUser{
-  email:string, password: string, nickName?: string
-}
-type TDispatch = (dispatch: object) => void
-type TGetState = (getState: object)=> void
-
-
-
-type TFunc = (user:IUser)=> (dispatch:TDispatch, getState: TGetState)=>void
+import {IUser} from '../../interfaces';
 
 const {
   updateUserProfile,
@@ -18,22 +10,22 @@ const {
   authLoginError,
 } = authSlice.actions;
 
-export const authSignUpUser:TFunc =
-  ({ email, password, nickName }) =>
-  async (dispatch, getState) => {
+export const authSignUpUser =
+  ({ email, password, nickName }:IUser) =>
+  async (dispatch: (arg0: { payload: { userId: string; nickName: string | null; email: string | null; }; type: string; }) => void) => {
     try {
       await db
         .auth()
         .createUserWithEmailAndPassword(email, password);
 
-      const user = await db.auth().currentUser;
+      const user = db.auth().currentUser;
       if (user) {
           await user.updateProfile({
             displayName: nickName,
           });
         }
       
-    const newUser = await db.auth().currentUser;
+    const newUser = db.auth().currentUser;
       if (newUser) {
         dispatch(updateUserProfile({
           nickName: newUser.displayName,
@@ -47,9 +39,9 @@ export const authSignUpUser:TFunc =
     }
   };
 
-export const authSignInUser :TFunc =
-  ({ email, password }) =>
-  async (dispatch, getState) => {
+export const authSignInUser =
+  ({ email, password }:IUser) =>
+  async (dispatch: (arg0: { payload: { errorLogin: boolean; }; type: string; }) => void) => {
     try {
       const user = await db
         .auth()
@@ -57,19 +49,18 @@ export const authSignInUser :TFunc =
       console.log("user", user);
     } catch (error) {
       console.log("error", error);
-      dispatch(authLoginError(null));
+      dispatch(authLoginError({errorLogin:true}));
     }
   };
 
-export const authSignOutUser:TFunc =
-  () => async (dispatch, getState) => {
-    await db.auth().signOut();
+export const authSignOutUser = () => async (dispatch: (arg0: { payload: undefined; type: string; }) => void):Promise<void> => {
+  await db.auth().signOut();
     dispatch(authSignOut());
   };
 
-export const authStateChangeUser:TFunc =
-  () => async (dispatch, getState) => {
-    await db.auth().onAuthStateChanged((user) => {
+export const authStateChangeUser =
+  () => async (dispatch: (arg0: { payload: { userId: string; nickName: string | null; email: string | null; } | { stateChange: boolean; }; type: string; }) => void) => {
+    db.auth().onAuthStateChanged((user) => {
       if (user) {
         dispatch(
           updateUserProfile({
@@ -86,3 +77,5 @@ export const authStateChangeUser:TFunc =
       }
     });
   };
+
+

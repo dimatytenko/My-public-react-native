@@ -1,6 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-
 import { DefaultPostsScreen } from "../../nestedScreens/DefaultPostsScreen/DefaultPostsScreen";
 import { CommentsScreen } from "../../nestedScreens/CommentsScreen/CommentsScreen";
 import { MapScreen } from "../../nestedScreens/MapScreen/MapScreen";

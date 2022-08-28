@@ -20,6 +20,7 @@ import validator from "validator";
 import { CustomButton } from "../../../components/CustomButton";
 import { globalStyle, auth } from "../../../styles/style";
 import { authSignInUser } from "../../../redux/auth/authOperations";
+import {IRootReduser} from '../../../redux/store';
 
 const initialState = {
   email: "",
@@ -32,7 +33,7 @@ export function LoginScreen() {
   const [isSecurity, setIsSecurity] = useState(true);
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const { errorLogin } = useSelector((state) => state.auth);
+  const { errorLogin } = useSelector((state:IRootReduser) => state.auth);
   const { height, width } = useWindowDimensions();
 
   const vertical = width < 600;
@@ -59,7 +60,7 @@ export function LoginScreen() {
       );
       return;
     } else {
-      dispatch(authSignInUser(state));
+      authSignInUser(state)(dispatch);
 
       if (errorLogin) {
         Vibration.vibrate();
@@ -136,7 +137,7 @@ export function LoginScreen() {
                 }
                 onFocus={() => setIsShowKeyboard(true)}
                 secureTextEntry={isSecurity}
-                icon={<Text>Показати</Text>}
+                icon={<Text></Text> }
                 iconPosition="right"
                 value={state.password}
                 onChangeText={(value) =>
@@ -168,7 +169,7 @@ export function LoginScreen() {
           <TouchableOpacity
             style={auth.link}
             activeOpacity={0.7}
-            onPress={() => navigation.navigate("Register")}
+            onPress={() => navigation.navigate("Register" as never)}
           >
             <Text style={auth.linkText}>
               Немає акаунта?{" "}

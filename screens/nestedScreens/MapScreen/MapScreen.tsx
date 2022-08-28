@@ -7,11 +7,16 @@ import {
 import MapView, { Marker } from "react-native-maps";
 import { useRoute } from "@react-navigation/native";
 
+import {ICoord} from '../../../interfaces';
+
 export function MapScreen() {
   const route = useRoute();
   const { height, width } = useWindowDimensions();
-  const latitude = route.params.location.latitude;
-  const longitude = route.params.location.longitude;
+  // const location:ICoord | undefined =route.params?.location
+  
+  const {latitude, longitude} = route.params.location;
+  // const longitude = route.params.location.longitude;
+
   return (
     <View style={styles.container}>
       <MapView

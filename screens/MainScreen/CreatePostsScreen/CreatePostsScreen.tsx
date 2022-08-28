@@ -20,16 +20,14 @@ import {styles} from './stylesCreatePostScreen';
 import { globalStyle } from "../../../styles/style";
 import { CustomButton } from "../../../components/CustomButton";
 import db from "../../../firebase/config";
-import {ICoord, IPost} from '../../../interfaces';
+import { ICoord, IPost } from '../../../interfaces';
+import { IRootReduser } from '../../../redux/store';
 
-
-
-    
 export function CreatePostsScreen() {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const { userId, nickName } = useSelector(
-    (state) => state.auth
+    (state:IRootReduser) => state.auth
   );
   const [hasPermission, setHasPermission] = useState(false);
   const [cameraRef, setCameraRef] = useState<Camera | null>(null);
@@ -87,7 +85,7 @@ export function CreatePostsScreen() {
       {}
     );
 
-      const coords: IPost = {
+      const coords: ICoord = {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
     };
@@ -132,6 +130,7 @@ export function CreatePostsScreen() {
       nickName,
       countLike:[],
       date: new Date(),
+      id: ''
     }    
     await db.firestore().collection("posts").add(currentPost);
   };

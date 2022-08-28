@@ -5,34 +5,20 @@ import { View, Text, StyleSheet } from "react-native";
 import db from "../../../firebase/config";
 import { PostsList } from "../../../components/PostsList";
 import { globalStyle } from "../../../styles/style";
+import { IRootReduser } from '../../../redux/store';
+import {IPost} from '../../../interfaces';
 
- interface TCurrentPost{
-    photo: string,
-    comment: string,
-    countComments: number,
-    place: string,
-    location: ICoords | null,
-    userId: string,
-    nickName: string,
-    countLike:string[],
-    date: object,
-    id?: string
-  }
 
-    interface ICoords{
-      latitude: number,
-      longitude: number
-    }
 export function DefaultPostsScreen() {
-  const [posts, setPosts] = useState<TCurrentPost[] | []>([]);
+  const [posts, setPosts] = useState<IPost[] | []>([]);
   const { email, nickName } = useSelector(
-    (state) => state.auth
+    (state:IRootReduser) => state.auth
   );
 
   console.log(posts)
 
-  const getAllPost = async () => {
-    await db
+  const getAllPost = () => {
+    db
       .firestore()
       .collection("posts")
       .onSnapshot((data) => {
@@ -43,7 +29,8 @@ export function DefaultPostsScreen() {
           }))
           .sort(
             (a, b) => b.date.seconds - a.date.seconds
-          );
+        );
+        console.log(posts);
         setPosts(posts);
       });
   };
