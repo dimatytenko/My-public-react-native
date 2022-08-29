@@ -4,13 +4,15 @@ import { DefaultPostsScreen } from "../../nestedScreens/DefaultPostsScreen/Defau
 import { CommentsScreen } from "../../nestedScreens/CommentsScreen/CommentsScreen";
 import { MapScreen } from "../../nestedScreens/MapScreen/MapScreen";
 import { LogOut } from "../../../components/LogOut";
+import {PostsStackParamList} from '../../../interfaces';
 
-const NestedScreen = createNativeStackNavigator();
+export const NestedScreen = createNativeStackNavigator<PostsStackParamList>();
 
 export function PostsScreen() {
   return (
     <NestedScreen.Navigator>
       <NestedScreen.Screen
+        component={DefaultPostsScreen}
         options={{
           title: "Публікації",
           headerTitleAlign: "center",
@@ -22,9 +24,7 @@ export function PostsScreen() {
           },
         }}
         name="DefaultScreen"
-      >
-        {() => <DefaultPostsScreen />}
-      </NestedScreen.Screen>
+      />
       <NestedScreen.Screen
         name="Comments"
         component={CommentsScreen}

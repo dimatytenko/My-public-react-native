@@ -15,16 +15,20 @@ import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
 import { Ionicons } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
+import { StackNavigationProp } from '@react-navigation/stack';
+import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
 
 import {styles} from './stylesCreatePostScreen';
 import { globalStyle } from "../../../styles/style";
 import { CustomButton } from "../../../components/CustomButton";
 import db from "../../../firebase/config";
-import { ICoord, IPost } from '../../../interfaces';
+import { ICoord, IPost, MainBottomTabParamList } from '../../../interfaces';
 import { IRootReduser } from '../../../redux/store';
 
+type postsBottomScreenProp = BottomTabNavigationProp<MainBottomTabParamList, 'Posts'>
+
 export function CreatePostsScreen() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<postsBottomScreenProp>();
   const isFocused = useIsFocused();
   const { userId, nickName } = useSelector(
     (state:IRootReduser) => state.auth
@@ -139,7 +143,7 @@ export function CreatePostsScreen() {
     if (!photo) {
       return;
     }
-    navigation.navigate("DefaultScreen");
+    navigation.navigate("Posts");
     uploadPostToServer();
     setPhoto('');
     setComment("");

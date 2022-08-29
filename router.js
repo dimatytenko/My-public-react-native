@@ -14,18 +14,16 @@ export const useRoute = (isAuth) => {
           options={{
             headerShown: false,
           }}
+          component={RegistrationScreen}
           name="Register"
-        >
-          {() => <RegistrationScreen />}
-        </AuthStack.Screen>
+        />
         <AuthStack.Screen
           options={{
             headerShown: false,
           }}
+          component={LoginScreen}
           name="Login"
-        >
-          {() => <LoginScreen />}
-        </AuthStack.Screen>
+        />
       </AuthStack.Navigator>
     );
   }
@@ -35,10 +33,9 @@ export const useRoute = (isAuth) => {
         options={{
           headerShown: false,
         }}
+        component={Home}
         name="Home"
-      >
-        {() => <Home></Home>}
-      </AuthStack.Screen>
+      />
     </AuthStack.Navigator>
   );
 };

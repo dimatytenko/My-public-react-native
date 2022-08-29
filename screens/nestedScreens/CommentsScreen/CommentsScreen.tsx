@@ -9,30 +9,32 @@ import {
   FlatList,
   Keyboard,
   useWindowDimensions,
+  ViewStyle,
+  TextStyle
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
-import { useRoute } from "@react-navigation/native";
+import { useRoute,RouteProp  } from "@react-navigation/native";
 
 import db from "../../../firebase/config";
 import { globalStyle } from "../../../styles/style";
 import { ImagePost } from "../../../components/ImagePost";
 import { toDateTime } from "../../../functions";
 import { IRootReduser } from '../../../redux/store';
-
+import { PostsStackParamList } from '../../../interfaces';
 interface IComment{
   comment: string,
   date: {seconds: number, nanoseconds: number},
   id: string,
-  nickName: string | number| null
+  nickName: string | number
 }
 
 export function CommentsScreen() {
-  const route = useRoute();
-  const flatListRef = useRef();
+  const route = useRoute<RouteProp<PostsStackParamList, "Comments">>();
+  const flatListRef = useRef<FlatList>(null);
   const [comment, setComment] = useState("");
   const [allComments, setAllComments] = useState<IComment[] | []>([]);
-  const { nickName } = useSelector((state:IRootReduser) => state.auth);
+  const { nickName } = useSelector((state: IRootReduser) => state.auth);
   const {postId,photo} = route.params
   
   const { height, width } = useWindowDimensions();
@@ -97,7 +99,7 @@ export function CommentsScreen() {
         <FlatList
           ref={flatListRef}
           onLayout={() =>
-            flatListRef.current.scrollToEnd({
+              flatListRef.current?.scrollToEnd({
               animated: true,
             })
           }
@@ -166,6 +168,7 @@ export function CommentsScreen() {
         />
         <TouchableOpacity
           activeOpacity={0.7}
+          onPress={createPost}
           style={styles.arrowUpButton}
         >
           <AntDesign
@@ -178,8 +181,20 @@ export function CommentsScreen() {
     </View>
   );
 }
+interface IStyles{
+  container: ViewStyle,
+  boxImage: ViewStyle,
+  commentsContainer:ViewStyle,
+  comment:ViewStyle,
+  commentNick:TextStyle,
+  commentBox:ViewStyle,
+  commentText:TextStyle,
+  boxInput:ViewStyle,
+  input:TextStyle,
+  arrowUpButton:ViewStyle
+}
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create<IStyles>({
   container: {
     flex: 1,
     paddingTop: 32,

@@ -11,8 +11,9 @@ import { CreatePostsScreen } from "../CreatePostsScreen";
 import { PostsScreen } from "../PostsScreen";
 import { ProfileScreen } from "../ProfileScreen";
 import { globalStyle } from "../../../styles/style";
+import {MainBottomTabParamList} from '../../../interfaces'
 
-const MainTab = createBottomTabNavigator();
+const MainTab = createBottomTabNavigator<MainBottomTabParamList>();
 
 export function Home() {
   return (

@@ -4,27 +4,32 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
-    ViewStyle,
+  ViewStyle,
   TextStyle,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { createStackNavigator } from '@react-navigation/stack';
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
+import {StackNavigationProp} from '@react-navigation/stack';
 
 import { globalStyle } from "../../styles/style";
 import db from "../../firebase/config";
 import { ImagePost } from "../../components/ImagePost";
-import { IPost,ICoord } from '../../interfaces';
+import { IPost, PostsStackParamList} from '../../interfaces';
 import { IRootReduser } from '../../redux/store';
 interface IProps{
   posts: IPost[]
 }
 
+type commentsScreenProp = StackNavigationProp<PostsStackParamList, 'Comments'>;
+type mapScreenProp = StackNavigationProp<PostsStackParamList, 'Map'>;
+
 export function PostsList({ posts, }: IProps) {
-  const navigation = useNavigation();
+  const navigationComments = useNavigation<commentsScreenProp>();
+  const navigationMap = useNavigation<mapScreenProp>();
+
   const { userId } = useSelector((state:IRootReduser) => state.auth);
 
   const changeLike = async (postId:string):Promise<void> => {
@@ -52,12 +57,6 @@ export function PostsList({ posts, }: IProps) {
   }
   }
   
-  type RootStackParamList = {
-  Home: undefined;
-  Profile: { postId: string, photo:string };
-  };
-  const RootStack = createStackNavigator<RootStackParamList>();
-  
   return (
     <FlatList
       data={posts}
@@ -73,7 +72,7 @@ export function PostsList({ posts, }: IProps) {
             <TouchableOpacity
               style={styles.infoBottomPost}
               onPress={() => {
-                navigation.navigate('Comments', {
+                navigationComments.navigate('Comments', {
                   postId: item.id,
                   photo: item.photo,
                 });
@@ -142,8 +141,8 @@ export function PostsList({ posts, }: IProps) {
             <TouchableOpacity
               style={styles.infoBottomPost}
               onPress={() => {
-                navigation.navigate("Map" as never, {
-                  location: item.location as ICoord,
+                navigationMap.navigate("Map", {
+                  location: item.location,
                 });
               }}
               activeOpacity={0.7}

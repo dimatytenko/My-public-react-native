@@ -16,10 +16,13 @@ import {
   Vibration,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import {StackNavigationProp} from '@react-navigation/stack';
+
 
 import { CustomButton } from "../../../components/CustomButton";
 import { globalStyle, auth } from "../../../styles/style";
 import { authSignUpUser } from "../../../redux/auth/authOperations";
+import {AuthStackParamList} from '../../../interfaces';
 
 const initialState = {
   nickName: "",
@@ -27,8 +30,10 @@ const initialState = {
   password: "",
 };
 
+type authScreenProp = StackNavigationProp<AuthStackParamList, 'Login'>;
+
 export function RegistrationScreen() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<authScreenProp>();
   const dispatch = useDispatch();
   const { height, width } = useWindowDimensions();
   const [isShowKeyboard, setIsShowKeyboard] =
@@ -188,7 +193,7 @@ export function RegistrationScreen() {
           <TouchableOpacity
             style={auth.link}
             activeOpacity={0.7}
-            onPress={() => navigation.navigate("Login" as never)}
+            onPress={() => navigation.navigate("Login")}
           >
             <Text style={auth.linkText}>
               Уже маєте акаунт?{" "}

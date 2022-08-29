@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ViewStyle } from "react-native";
 
 import db from "../../../firebase/config";
 import { PostsList } from "../../../components/PostsList";
@@ -8,14 +8,11 @@ import { globalStyle } from "../../../styles/style";
 import { IRootReduser } from '../../../redux/store';
 import {IPost} from '../../../interfaces';
 
-
 export function DefaultPostsScreen() {
   const [posts, setPosts] = useState<IPost[] | []>([]);
   const { email, nickName } = useSelector(
     (state:IRootReduser) => state.auth
   );
-
-  console.log(posts)
 
   const getAllPost = () => {
     db
@@ -54,7 +51,13 @@ export function DefaultPostsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+interface IProps{
+  container: ViewStyle,
+  owner: ViewStyle,
+  posts: ViewStyle,
+}
+
+const styles = StyleSheet.create<IProps>({
   container: {
     backgroundColor: globalStyle.backgrounds.page,
   },
