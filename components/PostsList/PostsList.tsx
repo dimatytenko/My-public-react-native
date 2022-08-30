@@ -41,20 +41,20 @@ export function PostsList({ posts, }: IProps) {
       const isLike = post.countLike.some(el=>el === userId);
       let likeArray = post.countLike;
 
-    if (!isLike) {
-      likeArray = [...likeArray, userId];
-    } else {
-      likeArray = likeArray.filter((el) => el !== userId);
-    }
+      if (!isLike) {
+        likeArray = [...likeArray, userId];
+      } else {
+        likeArray = likeArray.filter((el) => el !== userId);
+      }
     
-    await db
-    .firestore()
-    .collection("posts")
-    .doc(postId)
-    .update({
-      countLike: likeArray,
-    });
-  }
+      await db
+      .firestore()
+      .collection("posts")
+      .doc(postId)
+      .update({
+        countLike: likeArray,
+      });
+    }
   }
   
   return (
@@ -169,7 +169,6 @@ export function PostsList({ posts, }: IProps) {
     />
   );
 }
-
 interface IStyles{
   post:ViewStyle,
   place:TextStyle,

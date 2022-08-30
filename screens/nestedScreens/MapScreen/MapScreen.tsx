@@ -13,6 +13,7 @@ import { PostsStackParamList } from '../../../interfaces';
 export function MapScreen() {
   const route = useRoute<RouteProp<PostsStackParamList, "Map">>();
   const { height, width } = useWindowDimensions();
+
   const {latitude, longitude} = route.params.location;
 
   return (

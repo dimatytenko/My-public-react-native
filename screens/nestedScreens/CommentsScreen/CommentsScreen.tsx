@@ -21,13 +21,8 @@ import { globalStyle } from "../../../styles/style";
 import { ImagePost } from "../../../components/ImagePost";
 import { toDateTime } from "../../../functions";
 import { IRootReduser } from '../../../redux/store';
-import { PostsStackParamList } from '../../../interfaces';
-interface IComment{
-  comment: string,
-  date: {seconds: number, nanoseconds: number},
-  id: string,
-  nickName: string | number
-}
+import { PostsStackParamList, IComment } from '../../../interfaces';
+
 
 export function CommentsScreen() {
   const route = useRoute<RouteProp<PostsStackParamList, "Comments">>();

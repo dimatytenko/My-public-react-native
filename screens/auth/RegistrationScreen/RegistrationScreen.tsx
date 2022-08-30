@@ -18,7 +18,6 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import {StackNavigationProp} from '@react-navigation/stack';
 
-
 import { CustomButton } from "../../../components/CustomButton";
 import { globalStyle, auth } from "../../../styles/style";
 import { authSignUpUser } from "../../../redux/auth/authOperations";
@@ -160,9 +159,7 @@ export function RegistrationScreen() {
                 }
                 maxLength={12}
                 onFocus={() => setIsShowKeyboard(true)}
-                icon={<Text>Показати</Text>}
                 secureTextEntry={isSecurity}
-                iconPosition="right"
                 value={state.password}
                 onChangeText={(value) =>
                   setState((prevState) => ({

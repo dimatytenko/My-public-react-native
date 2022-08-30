@@ -15,7 +15,6 @@ import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
 import { Ionicons } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
-import { StackNavigationProp } from '@react-navigation/stack';
 import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
 
 import {styles} from './stylesCreatePostScreen';
@@ -35,7 +34,8 @@ export function CreatePostsScreen() {
   );
   const [hasPermission, setHasPermission] = useState(false);
   const [cameraRef, setCameraRef] = useState<Camera | null>(null);
-  const [location, setLocation] = useState<ICoord | null>(null);
+  const [location, setLocation] = useState<ICoord>({  latitude: 1,
+  longitude: 1});
   const [type, setType] = useState(CameraType.back);
   const [prevPhoto, setPrevPhoto] = useState<string | null>(null);
   const [photo, setPhoto] = useState('');

@@ -9,7 +9,7 @@ import { IRootReduser } from '../../../redux/store';
 import {IPost} from '../../../interfaces';
 
 export function DefaultPostsScreen() {
-  const [posts, setPosts] = useState<IPost[] | []>([]);
+  const [posts, setPosts] = useState<IPost[]  | []>([]);
   const { email, nickName } = useSelector(
     (state:IRootReduser) => state.auth
   );
@@ -19,7 +19,7 @@ export function DefaultPostsScreen() {
       .firestore()
       .collection("posts")
       .onSnapshot((data) => {
-        const posts = data.docs
+        const posts= data.docs
           .map((doc) => ({
             ...doc.data(),
             id: doc.id,
@@ -27,7 +27,6 @@ export function DefaultPostsScreen() {
           .sort(
             (a, b) => b.date.seconds - a.date.seconds
         );
-        console.log(posts);
         setPosts(posts);
       });
   };
@@ -50,7 +49,6 @@ export function DefaultPostsScreen() {
     </View>
   );
 }
-
 interface IProps{
   container: ViewStyle,
   owner: ViewStyle,

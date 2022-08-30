@@ -14,8 +14,15 @@ export interface IPost  {
   userId: string | null;
   nickName: string | number | null;
   countLike: string[]|[];
-  date: {seconds: number, nanoseconds: number};
+  date:Date | {seconds: number, nanoseconds: number};
   id: string;
+}
+
+export interface IComment{
+  comment: string,
+  date: {seconds: number, nanoseconds: number},
+  id: string,
+  nickName: string | number
 }
 export interface IInitialState {
   userId: string | null;

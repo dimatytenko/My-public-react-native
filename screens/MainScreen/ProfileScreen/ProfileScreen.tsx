@@ -13,10 +13,11 @@ import db from "../../../firebase/config";
 import { PostsList } from "../../../components/PostsList";
 import { globalStyle } from "../../../styles/style";
 import { LogOut } from "../../../components/LogOut";
-import {IRootReduser} from '../../../redux/store';
+import { IRootReduser } from '../../../redux/store';
+import { IPost } from '../../../interfaces'
 
 export function ProfileScreen() {
-  const [userPosts, setUserPosts] = useState([]);
+  const [userPosts, setUserPosts] = useState<IPost[]| []>([]);
   const { userId, nickName } = useSelector(
     (state:IRootReduser) => state.auth
   );

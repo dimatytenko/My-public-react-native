@@ -18,7 +18,6 @@ import { useNavigation } from "@react-navigation/native";
 import validator from "validator";
 import {StackNavigationProp} from '@react-navigation/stack';
 
-
 import { CustomButton } from "../../../components/CustomButton";
 import { globalStyle, auth } from "../../../styles/style";
 import { authSignInUser } from "../../../redux/auth/authOperations";
@@ -31,7 +30,6 @@ const initialState = {
 };
 
 type authScreenProp = StackNavigationProp<AuthStackParamList, 'Register'>;
-
 
 export function LoginScreen() {
   const [isShowKeyboard, setIsShowKeyboard] =
@@ -144,8 +142,6 @@ export function LoginScreen() {
                 }
                 onFocus={() => setIsShowKeyboard(true)}
                 secureTextEntry={isSecurity}
-                icon={<Text></Text>}
-                iconPosition="right"
                 value={state.password}
                 onChangeText={(value) =>
                   setState((prevState) => ({
